@@ -159,7 +159,7 @@ export default function Footer() {
 
           <div className="mt-8 border-l-4 border-[#FFC928] pl-4">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#FFC928]">Founder &amp; Chairman</p>
-            <p className="mt-1 font-display text-2xl font-extrabold text-white">G. Gopinath</p>
+            <p className="mt-1 font-display text-2xl font-extrabold text-white">Saranya Gopinath</p>
           </div>
         </motion.div>
       </div>
