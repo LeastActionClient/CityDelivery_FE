@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-brand-light font-sans text-brand-text antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+  ::selection {
+    background: #FFC928;
+    color: #111713;
+  }
+  :focus-visible {
+    outline: 3px solid #168447;
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+
+  /* All buttons are brand green with consistent hover / active / disabled states */
+  .btn {
+    @apply inline-flex min-h-[48px] select-none items-center justify-center gap-2 rounded-full bg-brand-green px-7 py-3 text-[15px] font-bold text-white shadow-glow transition-all duration-200;
+  }
+  .btn:hover { @apply bg-brand-green-hover; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled, .btn[aria-disabled='true'] { @apply cursor-not-allowed opacity-60 shadow-none; }
+  .btn-lg { @apply min-h-[56px] px-9 text-base; }
+  .btn-sm { @apply min-h-[40px] px-5 py-2 text-sm; }
+  /* Outline-style CTA that is still clearly green */
+  .btn-outline {
+    @apply bg-transparent text-brand-green shadow-none ring-2 ring-inset ring-brand-green;
+  }
+  .btn-outline:hover { @apply bg-brand-green text-white; }
+
+  .glass {
+    @apply border border-white/60 bg-white/55 shadow-soft backdrop-blur-xl;
+  }
+  .glass-dark {
+    @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-brand-yellow/25 px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-brand-green;
+  }
+
+  .field-label { @apply mb-2 block text-sm font-bold text-brand-text; }
+  .field {
+    @apply w-full rounded-2xl border-2 border-transparent bg-white px-4 py-3.5 text-[15px] text-brand-text shadow-[0_1px_0_rgba(17,23,19,0.06),0_8px_24px_-14px_rgba(17,23,19,0.25)] outline-none ring-1 ring-black/5 transition placeholder:text-brand-muted/70;
+  }
+  .field:focus { @apply border-brand-green ring-0; }
+  .field-error { @apply border-red-500 bg-red-50/40; }
+}
+
+.grain {
+  background-image: radial-gradient(rgba(17, 23, 19, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Skeleton shimmer for loading placeholders */
+.skeleton { position: relative; overflow: hidden; background: rgba(255, 201, 40, 0.18); }
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 100% { transform: translateX(100%); } }

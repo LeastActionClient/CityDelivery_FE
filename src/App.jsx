@@ -1,0 +1,30 @@
+import { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout.jsx';
+import PageLoader from './components/PageLoader.jsx';
+
+const Home = lazy(() => import('./pages/Home.jsx'));
+const RequestProduct = lazy(() => import('./pages/RequestProduct.jsx'));
+const HowItWorks = lazy(() => import('./pages/HowItWorks.jsx'));
+const About = lazy(() => import('./pages/About.jsx'));
+const Contact = lazy(() => import('./pages/Contact.jsx'));
+const Privacy = lazy(() => import('./pages/Privacy.jsx'));
+const NotFound = lazy(() => import('./pages/NotFound.jsx'));
+
+export default function App() {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="request" element={<RequestProduct />} />
+          <Route path="how-it-works" element={<HowItWorks />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </Suspense>
+  );
+}
