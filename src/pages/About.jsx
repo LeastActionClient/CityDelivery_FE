@@ -4,7 +4,7 @@ import Button from '../components/Button.jsx';
 import { Reveal, Stagger, StaggerItem } from '../components/Reveal.jsx';
 import TiltCard from '../components/TiltCard.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
-import { LogoMark } from '../components/Logo.jsx';
+import heroVisual from '../assets/image.png';
 
 const BLOCKS = [
   { icon: Target, title: 'Our mission', text: 'To make asking for the products you love as simple as filling in a short form — with clear communication at every step.' },
@@ -35,8 +35,12 @@ export default function About() {
             <div className="relative mx-auto aspect-square w-full max-w-md">
               <div className="absolute inset-0 rotate-6 rounded-[3rem] bg-brand-yellow" />
               <div className="absolute inset-0 -rotate-3 rounded-[3rem] bg-brand-green/90" />
-              <div className="absolute inset-0 grid place-items-center rounded-[3rem] bg-brand-dark shadow-lift">
-                <LogoMark className="h-40 w-40 animate-floaty" />
+              <div className="absolute inset-0 overflow-hidden rounded-[3rem] bg-brand-yellow shadow-lift">
+                <img
+                  src={heroVisual}
+                  alt="City Delivery Services courier delivering products around the city"
+                  className="h-full w-full object-cover"
+                />
               </div>
             </div>
           </Reveal>
