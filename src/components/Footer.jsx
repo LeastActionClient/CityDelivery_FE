@@ -96,6 +96,12 @@ export default function Footer() {
               </li>
             ))}
           </ul>
+          <Link
+            to="/admin"
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:border-[#FFC928] hover:bg-[#FFC928] hover:text-[#16161A]"
+          >
+            Admin <ArrowRight size={15} />
+          </Link>
         </motion.div>
 
         {/* contact */}

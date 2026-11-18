@@ -9,12 +9,14 @@ const HowItWorks = lazy(() => import('./pages/HowItWorks.jsx'));
 const About = lazy(() => import('./pages/About.jsx'));
 const Contact = lazy(() => import('./pages/Contact.jsx'));
 const Privacy = lazy(() => import('./pages/Privacy.jsx'));
+const Admin = lazy(() => import('./pages/Admin.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 
 export default function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
+        <Route path="admin" element={<Admin />} />
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="request" element={<RequestProduct />} />

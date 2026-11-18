@@ -55,3 +55,19 @@ export function submitContactMessage(payload) {
 export function getRequestStatus(requestId) {
   return request(`/requests/${encodeURIComponent(requestId)}/status`);
 }
+
+export function getAdminRequests(apiKey, { page = 1, status = '' } = {}) {
+  const params = new URLSearchParams({ page: String(page), limit: '25' });
+  if (status) params.set('status', status);
+  return request(`/admin/requests?${params.toString()}`, {
+    headers: { 'x-api-key': apiKey },
+  });
+}
+
+export function updateAdminRequestStatus(apiKey, requestId, status) {
+  return request(`/admin/requests/${encodeURIComponent(requestId)}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+    body: JSON.stringify({ status }),
+  });
+}
