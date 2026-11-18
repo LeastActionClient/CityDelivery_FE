@@ -241,7 +241,7 @@ function Hero() {
             aria-hidden="true"
             animate={{ y: [0, -18, 0, 0] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: [0.22, 1, 0.36, 1], delay: i * 0.13 }}
-            style={{ color: '#0F8A2F', textShadow: '0 3px 0 #FFC928, 0 7px 12px rgba(17,23,19,.2)' }}
+            style={{ color: '#16161A', textShadow: '0 3px 0 #FFC928, 0 7px 12px rgba(17,23,19,.2)' }}
           >
             {letter === ' ' ? '\u00A0' : letter}
           </motion.span>

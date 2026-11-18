@@ -61,7 +61,7 @@ function Login({ onLogin, error, busy }) {
 
   return (
     <main className="relative grid min-h-screen place-items-center overflow-hidden bg-brand-light px-5 py-12">
-      <img src={responsiveHeroBackground} alt="" className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center" aria-hidden="true" />
+      <img src={responsiveHeroBackground} alt="" className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center lg:hidden" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0 bg-white/35 backdrop-blur-[1px]" aria-hidden="true" />
       <section className="relative z-10 w-full max-w-md rounded-4xl bg-white/95 p-7 shadow-lift ring-1 ring-black/5 sm:p-10">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-brand-dark text-brand-yellow shadow-soft">
