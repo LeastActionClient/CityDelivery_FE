@@ -3,6 +3,7 @@ import { useLocation, useOutlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
+import WhatsAppFloat from '../components/WhatsAppFloat.jsx';
 import { pageVariants } from '../animations/variants.js';
 
 export default function MainLayout() {
@@ -27,6 +28,7 @@ export default function MainLayout() {
         </AnimatePresence>
       </main>
       <Footer />
+      <WhatsAppFloat />
     </div>
   );
 }

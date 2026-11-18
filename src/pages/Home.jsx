@@ -80,8 +80,10 @@ function Hero() {
         .hv-glow{animation:hv-glow 4.5s ease-in-out infinite}
         .hv-p{animation:hv-drift linear infinite}
         .hv-icon{animation:hv-icon 4.5s ease-in-out infinite}
-        .hv-btn{transition:transform .15s,box-shadow .15s}
+        .hv-btn{transition:transform .15s,box-shadow .15s;animation:hv-btn-float 3.2s ease-in-out infinite;will-change:transform}
+        .hv-btn-alt{animation-delay:-1.6s}
         .hv-btn:hover{transform:translateY(-3px)}
+        .hv-btn:hover,.hv-btn:focus-visible{animation-play-state:paused}
         .hv-btn:active{transform:translateY(3px)}
         .hv-feat{transition:transform .3s;transform-style:preserve-3d}
         .hv-feat:hover{transform:perspective(500px) rotateY(10deg) translateY(-4px)}
@@ -91,11 +93,12 @@ function Hero() {
         @keyframes hv-glow{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.95;transform:scale(1.08)}}
         @keyframes hv-drift{0%{transform:translate3d(0,0,0) scale(.6);opacity:0}15%{opacity:.9}100%{transform:translate3d(-9vw,-5vw,0) scale(1.2);opacity:0}}
         @keyframes hv-icon{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(-6deg)}}
+        @keyframes hv-btn-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
         @media (prefers-reduced-motion:reduce){.hv *{animation:none!important;transition:none!important}.hv-tilt{transform:none!important}}
       `}</style>
 
       {/* Full-bleed hero artwork on responsive screens */}
-      <div className="pointer-events-none absolute inset-x-0 top-16 z-0 h-full sm:top-20 lg:hidden" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-x-0 top-10 z-0 h-full sm:top-20 lg:hidden" aria-hidden="true">
         <img src={responsiveHeroBackground} alt="" className="h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-white/10" />
       </div>
@@ -192,7 +195,7 @@ function Hero() {
           </Link>
           <Link
             to="/how-it-works"
-            className="hv-btn inline-flex items-center justify-center gap-3 rounded-2xl border-2 border-[#FFE9A0] bg-white px-8 py-4 text-lg font-bold text-[#16161A] lg:h-[4.1vw] lg:gap-[0.9vw] lg:rounded-[1.1vw] lg:px-[2.3vw] lg:py-0 lg:text-[1.35vw]"
+            className="hv-btn hv-btn-alt inline-flex items-center justify-center gap-3 rounded-2xl border-2 border-[#FFE9A0] bg-white px-8 py-4 text-lg font-bold text-[#16161A] lg:h-[4.1vw] lg:gap-[0.9vw] lg:rounded-[1.1vw] lg:px-[2.3vw] lg:py-0 lg:text-[1.35vw]"
             style={{ boxShadow: '0 6px 0 #F3D56B,0 16px 24px rgba(0,0,0,.08)' }}
           >
             How It Works <Play className="h-5 w-5 lg:h-[1.4vw] lg:w-[1.4vw]" />
