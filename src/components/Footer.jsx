@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, MessageCircle, ArrowRight } from 'lucide-react';
-import Logo from './Logo.jsx';
 import Button from './Button.jsx';
 import { SITE, NAV_LINKS } from '../utils/config.js';
+import logo2 from '../assets/Logo2.png';
 
 const SOCIAL_ICONS = { Instagram, Facebook, X: Twitter, WhatsApp: MessageCircle };
 
@@ -65,7 +65,9 @@ export default function Footer() {
           style={{ transformPerspective: 1000 }}
           className="md:col-span-5"
         >
-          <Logo light />
+          <Link to="/" className="group inline-flex" aria-label="City Delivery Services — home">
+            <img src={logo2} alt="City Delivery Services" className="h-28 w-auto max-w-full rounded-2xl object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-32" />
+          </Link>
           <p className="mt-5 max-w-sm leading-relaxed text-white/65">
             Tell us the product, the store and where it should go. We handle the request from there.
           </p>
