@@ -10,6 +10,7 @@ import Counter from '../components/Counter.jsx';
 import FAQ from '../components/FAQ.jsx';
 // Put the image at src/assets/hero-visual.png
 import heroVisual from '../assets/image.png';
+import responsiveHeroBackground from '../assets/resposiveImage.png';
 
 const GREEN = '#0F8A2F';
 const DARK = '#16161A';
@@ -93,6 +94,12 @@ function Hero() {
         @media (prefers-reduced-motion:reduce){.hv *{animation:none!important;transition:none!important}.hv-tilt{transform:none!important}}
       `}</style>
 
+      {/* Full-bleed hero artwork on responsive screens */}
+      <div className="pointer-events-none absolute inset-x-0 top-16 z-0 h-full sm:top-20 lg:hidden" aria-hidden="true">
+        <img src={responsiveHeroBackground} alt="" className="h-full w-full object-cover object-center" />
+        <div className="absolute inset-0 bg-white/10" />
+      </div>
+
       {/* drifting sparkles */}
       {[
         { l: '48%', t: '62%', s: 10, d: 5, o: 0 },
@@ -105,7 +112,7 @@ function Hero() {
       ))}
 
       {/* Illustration (image) with 3D mouse parallax */}
-      <div className="hv-tilt pointer-events-none absolute bottom-0 left-1/2 -ml-[62.5%] w-[125%] max-w-none sm:left-auto sm:right-0 sm:ml-0 sm:w-[90%] lg:bottom-auto lg:top-[9.78%] lg:w-[60.05%]">
+      <div className="hv-tilt pointer-events-none absolute bottom-0 left-1/2 -ml-[62.5%] hidden w-[125%] max-w-none sm:left-auto sm:right-0 sm:ml-0 sm:w-[90%] lg:top-[9.78%] lg:block lg:w-[60.05%]">
         <span className="hv-glow pointer-events-none absolute left-[22%] top-[18%] h-[60%] w-[55%] rounded-full bg-[#FFF3A8] blur-3xl" style={{ transform: 'translateZ(-60px)' }} aria-hidden="true" />
         <div className="hv-bob">
           <motion.img
@@ -192,7 +199,7 @@ function Hero() {
           </Link>
         </motion.div>
 
-        <ul className="mt-9 flex flex-wrap items-stretch gap-y-6 lg:mt-[3vw] lg:flex-nowrap">
+        <ul className="mt-9 hidden flex-wrap items-stretch gap-y-6 lg:mt-[3vw] lg:flex lg:flex-nowrap">
           {[
             { icon: Zap, title: 'Easy Request', text: 'Tell us what you need' },
             { icon: Store, title: 'Any Store', text: 'From your preferred store' },

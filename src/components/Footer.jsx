@@ -150,6 +150,11 @@ export default function Footer() {
               </div>
             );
           })()}
+
+          <div className="mt-8 border-l-4 border-[#FFC928] pl-4">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#FFC928]">Founder &amp; Chairman</p>
+            <p className="mt-1 font-display text-2xl font-extrabold text-white">G. Gopinath</p>
+          </div>
         </motion.div>
       </div>
 
@@ -165,14 +170,16 @@ export default function Footer() {
               />
             </a>
             <span>
-              Powered by{' '}
-              <a href="https://www.leastactioncompany.com/" target="_blank" rel="noopener noreferrer" className="font-semibold text-white transition-colors hover:text-[#FFC928]">
-                Least Action Company
-              </a>
-              <span className="mx-1">·</span>
-              <a href="https://www.sgfoundationtrust.com/" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[#FFC928]">
-                A unit of SG Foundation Trust
-              </a>
+              <span className="block">
+                Powered by{' '}
+                <a href="https://www.leastactioncompany.com/" target="_blank" rel="noopener noreferrer" className="font-semibold text-white transition-colors hover:text-[#FFC928]">
+                  Least Action Company
+                </a>
+                <span className="mx-1">·</span>
+                <a href="https://www.sgfoundationtrust.com/" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[#FFC928]">
+                  A unit of SG Foundation Trust
+                </a>
+              </span>
             </span>
           </div>
           <div className="flex flex-col gap-2 lg:items-end">
