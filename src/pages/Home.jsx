@@ -100,7 +100,7 @@ function Hero() {
       `}</style>
 
       {/* Full-bleed hero artwork on responsive screens */}
-      <div className="pointer-events-none absolute inset-x-0 top-10 z-0 h-full sm:top-20 lg:hidden" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-full sm:top-20 lg:hidden" aria-hidden="true">
         <img src={responsiveHeroBackground} alt="" className="h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-white/10" />
       </div>
@@ -178,7 +178,7 @@ function Hero() {
           transition={{ delay: 0.6, duration: 0.6 }}
           className="mt-8 max-w-lg text-lg leading-relaxed text-[#5b5a55] sm:text-xl lg:mt-[2.2vw] lg:max-w-[40vw] lg:text-[1.45vw] lg:leading-[1.38]"
         >
-          Tell us what you need and where you want it from. City Delivery Services makes requesting your favourite products{' '}
+          Tell us what you need and where you want it from. {' '} 
           <strong className="font-bold text-[#16161A]">simple and convenient.</strong>
         </motion.p>
 
