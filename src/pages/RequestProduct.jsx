@@ -21,13 +21,9 @@ const INITIAL = {
 
 const REQUIRED_MSG = {
   customerName: 'Please tell us your name.',
-  email: 'Please enter your email address.',
   phone: 'Please enter your mobile number.',
   productName: 'What product do you need?',
   productCategory: 'Please choose a category.',
-  storeName: 'Which store should we get it from?',
-  storeLocation: 'Where is the store located?',
-  productDescription: 'Please describe the product (at least 10 characters).',
   deliveryAddress: 'Where should we deliver it?',
   city: 'Please enter the city.',
   postalCode: 'Please enter the postal code.',
@@ -38,14 +34,15 @@ function validate(v) {
   const t = (k) => v[k].trim();
   Object.keys(REQUIRED_MSG).forEach((k) => { if (!t(k)) e[k] = REQUIRED_MSG[k]; });
   if (!e.customerName && t('customerName').length < 2) e.customerName = 'Name must be at least 2 characters.';
-  if (!e.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t('email'))) e.email = 'Please enter a valid email address.';
+  if (t('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t('email'))) e.email = 'Please enter a valid email address.';
   if (!e.phone) {
     const digits = t('phone').replace(/\D/g, '');
     if (!/^\+?[\d\s()-]{7,18}$/.test(t('phone')) || digits.length < 7 || digits.length > 15) e.phone = 'Please enter a valid mobile number.';
   }
   if (!e.productName && t('productName').length < 2) e.productName = 'Product name is too short.';
-  if (!e.storeName && t('storeName').length < 2) e.storeName = 'Store name is too short.';
-  if (!e.productDescription && t('productDescription').length < 10) e.productDescription = 'Please add a little more detail (at least 10 characters).';
+  if (t('storeName') && t('storeName').length < 2) e.storeName = 'Store name is too short.';
+  if (t('storeLocation') && t('storeLocation').length < 2) e.storeLocation = 'Store location is too short.';
+  if (t('productDescription') && t('productDescription').length < 10) e.productDescription = 'Please add a little more detail (at least 10 characters).';
   if (!e.deliveryAddress && t('deliveryAddress').length < 5) e.deliveryAddress = 'Please enter the full delivery address.';
   if (!e.postalCode && !/^[A-Za-z0-9][A-Za-z0-9\s-]{2,10}$/.test(t('postalCode'))) e.postalCode = 'Please enter a valid postal code.';
   const q = Number(v.quantity);
@@ -230,7 +227,7 @@ export default function RequestProduct() {
                       <input {...common('customerName')} type="text" autoComplete="name" placeholder="e.g. Priya Raman" maxLength={80} />
                     </Field>
                   </div>
-                  <Field id="email" label="Email address" required error={errors.email}>
+                  <Field id="email" label="Email address" optional error={errors.email}>
                     <input {...common('email')} type="email" autoComplete="email" inputMode="email" placeholder="you@example.com" maxLength={120} />
                   </Field>
                   <Field id="phone" label="Mobile number" required error={errors.phone}>
@@ -245,14 +242,14 @@ export default function RequestProduct() {
                   <Field id="productCategory" label="Product category" required error={errors.productCategory}>
                     <CustomSelect id="productCategory" value={values.productCategory} onChange={set('productCategory')} options={CATEGORIES} placeholder="Choose a category" invalid={!!errors.productCategory} />
                   </Field>
-                  <Field id="storeName" label="Store name" required error={errors.storeName}>
+                  <Field id="storeName" label="Store name" optional error={errors.storeName}>
                     <input {...common('storeName')} type="text" placeholder="e.g. Fresh Mart" maxLength={120} />
                   </Field>
-                  <Field id="storeLocation" label="Store location" required error={errors.storeLocation} hint="Area, street or landmark.">
+                  <Field id="storeLocation" label="Store location" optional error={errors.storeLocation} hint="Area, street or landmark.">
                     <input {...common('storeLocation')} type="text" placeholder="e.g. Anna Nagar, near the main roundabout" maxLength={200} />
                   </Field>
                   <div className="sm:col-span-2">
-                    <Field id="productDescription" label="Product description" required error={errors.productDescription} hint="Brand, size, colour, flavour — anything that helps us find the right one.">
+                    <Field id="productDescription" label="Product description" optional error={errors.productDescription} hint="Brand, size, colour, flavour — anything that helps us find the right one.">
                       <textarea {...common('productDescription')} rows={4} maxLength={1500} placeholder="Describe the product in as much detail as you can…" />
                     </Field>
                   </div>

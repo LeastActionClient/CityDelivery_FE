@@ -28,7 +28,10 @@ async function request(path, options = {}) {
   }
 
   if (!res.ok || data?.success === false) {
-    throw new ApiError(data?.message || 'Something went wrong. Please try again.', {
+    const fieldSummary = data?.errors
+      ? ` ${Object.entries(data.errors).map(([field, error]) => `${field}: ${error}`).join(' ' )}`
+      : '';
+    throw new ApiError(`${data?.message || 'Something went wrong. Please try again.'}${fieldSummary}`, {
       status: res.status,
       fieldErrors: data?.errors,
     });

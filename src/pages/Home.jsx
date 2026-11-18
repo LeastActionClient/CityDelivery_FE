@@ -51,6 +51,8 @@ const FEATURES = [
   { icon: Bike, title: 'Timely Support', text: "We'll get in touch quickly" },
 ];
 
+const HERO_BRAND = 'City Delivery Services';
+
 function Hero() {
   const fade = (d = 0) => ({ initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { delay: d } });
   const mask = 'linear-gradient(to right, transparent 0%, #000 6%), linear-gradient(to bottom, transparent 0%, #000 4%)';
@@ -227,6 +229,24 @@ function Hero() {
           ))}
         </ul>
       </div>
+
+      <motion.div
+        className="pointer-events-none absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 whitespace-nowrap text-center font-display text-[clamp(1.6rem,6vw,5.5rem)] font-black uppercase tracking-[0.08em] drop-shadow-[0_4px_0_rgba(255,255,255,.7),0_8px_16px_rgba(17,23,19,.2)] lg:hidden"
+        aria-label={HERO_BRAND}
+      >
+        {HERO_BRAND.split('').map((letter, i) => (
+          <motion.span
+            key={`${letter}-${i}`}
+            className="inline-block"
+            aria-hidden="true"
+            animate={{ y: [0, -18, 0, 0] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: [0.22, 1, 0.36, 1], delay: i * 0.13 }}
+            style={{ color: '#0F8A2F', textShadow: '0 3px 0 #FFC928, 0 7px 12px rgba(17,23,19,.2)' }}
+          >
+            {letter === ' ' ? '\u00A0' : letter}
+          </motion.span>
+        ))}
+      </motion.div>
     </section>
   );
 }
@@ -566,116 +586,7 @@ function Stats() {
   return (
     // Paste this <section> as the return value of your Stats component.
 // Needs only: motion (framer-motion) and ClipboardList, Send, ShieldCheck (lucide-react).
-<section id="stats" className="st pb-24 sm:pb-32">
-      <style>{`
-        .st-card{transform-style:preserve-3d;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease-out,box-shadow .3s;box-shadow:0 8px 0 rgba(176,108,0,.45),0 24px 38px rgba(120,70,0,.28),inset 0 2px 0 rgba(255,255,255,.75)}
-        .st-card:hover{box-shadow:0 8px 0 rgba(176,108,0,.5),0 34px 54px rgba(120,70,0,.35),inset 0 2px 0 rgba(255,255,255,.85)}
-        .st-glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.65),transparent 60%)}
-        .st-card:hover .st-glare{opacity:1}
-        .st-icon{transform:translateZ(55px);animation:st-float 4.8s ease-in-out infinite}
-        .st-num{transform:translateZ(70px)}
-        .st-label{transform:translateZ(30px)}
-        .st-shimmer{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit}
-        .st-shimmer::after{content:"";position:absolute;top:-20%;bottom:-20%;width:30%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.45),transparent);animation:st-sweep 6s ease-in-out infinite}
-        .st-orb{animation:st-orb 8s ease-in-out infinite}
-        .st-ring{animation:st-spin 20s linear infinite}
-        @keyframes st-float{0%,100%{transform:translateZ(55px) translateY(0) rotate(-4deg)}50%{transform:translateZ(55px) translateY(-9px) rotate(4deg)}}
-        @keyframes st-sweep{0%{left:-40%}60%,100%{left:130%}}
-        @keyframes st-orb{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(28px,-24px) scale(1.15)}}
-        @keyframes st-spin{to{transform:rotate(360deg)}}
-        @media (prefers-reduced-motion:reduce){.st *{animation:none!important;transition:none!important}}
-      `}</style>
-
-      <div className="container-x mt-20">
-        <motion.div
-          initial={{ opacity: 0, y: 70, rotateX: 25 }}
-          whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ type: 'spring', stiffness: 60, damping: 15 }}
-          style={{ transformPerspective: 1200, background: 'linear-gradient(135deg,#FFD84D 0%,#FFC928 50%,#F5B000 100%)', boxShadow: '0 12px 0 #D99A00,0 40px 70px -20px rgba(150,90,0,.5),inset 0 3px 0 rgba(255,255,255,.55)' }}
-          className="relative overflow-hidden rounded-[2.5rem] p-8 sm:p-14"
-        >
-          {/* animated background */}
-          <span className="st-shimmer" aria-hidden="true" />
-          <span className="st-orb pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-white/35 blur-3xl" aria-hidden="true" />
-          <span className="st-orb pointer-events-none absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-[#0F8A2F]/25 blur-3xl" style={{ animationDelay: '-4s' }} aria-hidden="true" />
-          <span className="st-ring pointer-events-none absolute -right-24 -top-24 hidden h-72 w-72 rounded-full border-2 border-dashed border-white/50 md:block" aria-hidden="true" />
-
-          <div className="relative grid gap-8 sm:grid-cols-3" style={{ perspective: '1200px' }}>
-            {[
-              { icon: ClipboardList, value: 3, suffix: ' sections', label: 'To fill in: you, the product, delivery' },
-              { icon: Send, value: 5, suffix: ' steps', label: 'From request to our reply' },
-              { icon: ShieldCheck, value: 1, suffix: ' unique ID', label: 'Issued for every request' },
-            ].map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 50, rotateY: i === 0 ? -35 : i === 2 ? 35 : 0, scale: 0.85 }}
-                whileInView={{ opacity: 1, y: 0, rotateY: 0, scale: 1 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ type: 'spring', stiffness: 70, damping: 13, delay: 0.2 + i * 0.15 }}
-                style={{ transformPerspective: 1000 }}
-              >
-                <div
-                  className="st-card relative h-full overflow-hidden rounded-3xl bg-white/35 px-6 py-8 text-center ring-1 ring-white/70 backdrop-blur-sm"
-                  onMouseMove={(e) => {
-                    const el = e.currentTarget;
-                    const r = el.getBoundingClientRect();
-                    const px = (e.clientX - r.left) / r.width;
-                    const py = (e.clientY - r.top) / r.height;
-                    el.style.setProperty('--ry', `${(px - 0.5) * 18}deg`);
-                    el.style.setProperty('--rx', `${-(py - 0.5) * 18}deg`);
-                    el.style.setProperty('--mx', `${px * 100}%`);
-                    el.style.setProperty('--my', `${py * 100}%`);
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.setProperty('--rx', '0deg');
-                    e.currentTarget.style.setProperty('--ry', '0deg');
-                  }}
-                >
-                  <span className="st-glare" aria-hidden="true" />
-
-                  <span
-                    className="st-icon mx-auto grid h-14 w-14 place-items-center rounded-2xl text-[#FFC928]"
-                    style={{ animationDelay: `${i * 0.6}s`, background: 'linear-gradient(145deg,#2c2c34,#111115)', boxShadow: '0 6px 0 #050507,0 16px 24px rgba(0,0,0,.3),inset 0 2px 0 rgba(255,255,255,.18)' }}
-                  >
-                    <s.icon size={26} strokeWidth={2.2} />
-                  </span>
-
-                  {/* counts up once when scrolled into view */}
-                  <div className="st-num mt-6 text-5xl font-black text-[#16161A] sm:text-6xl" style={{ textShadow: '0 2px 0 rgba(255,255,255,.7),0 8px 16px rgba(120,70,0,.3)' }}>
-                    <motion.span
-                      onViewportEnter={(entry) => {
-                        const el = entry && entry.target;
-                        if (!el || el.dataset.done) return;
-                        el.dataset.done = '1';
-                        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = String(s.value); return; }
-                        const t0 = performance.now();
-                        const tick = (t) => {
-                          const p = Math.min((t - t0) / 1400, 1);
-                          el.textContent = String(Math.round(s.value * (1 - Math.pow(1 - p, 3))));
-                          if (p < 1) requestAnimationFrame(tick);
-                        };
-                        requestAnimationFrame(tick);
-                      }}
-                      viewport={{ once: true }}
-                    >
-                      {s.value}
-                    </motion.span>
-                    <span className="text-3xl sm:text-4xl">{s.suffix}</span>
-                  </div>
-
-                  <p className="st-label mx-auto mt-3 max-w-[16rem] font-semibold text-[#16161A]/75">{s.label}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <p className="relative mt-10 text-center text-xs font-bold uppercase tracking-widest text-[#16161A]/55">
-            These figures describe how the service works. They are not performance statistics.
-          </p>
-        </motion.div>
-      </div>
-    </section>
+<div></div>
   );
 }
 
@@ -704,7 +615,7 @@ export default function Home() {
       <Why />
       <ProcessIllustration />
       <Stats />
-      <section className="pb-24 sm:pb-32">
+      <section className="pb-24 sm:pb-32 mt-10">
         <div className="container-x">
           <SectionHeading eyebrow="FAQ" title="Questions, answered." />
           <div className="mt-12"><FAQ items={FAQS} /></div>
