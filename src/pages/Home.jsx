@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ClipboardList, Store, Send, BellRing, PhoneCall, MousePointerClick, ShieldCheck, Zap, HeartHandshake, Truck, Play, Bike } from 'lucide-react';
+import { ArrowRight, ClipboardList, Store, Send, BellRing, PhoneCall, MousePointerClick, ShieldCheck, Zap, HeartHandshake, Truck, Play, Bike, Star, Quote, Check } from 'lucide-react';
 import Button from '../components/Button.jsx';
 import FloatingShapes from '../components/FloatingShapes.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
@@ -109,6 +109,15 @@ const FAQS = [
   { q: 'How can I contact you?', a: 'Use the contact form on the Contact page. Any email, phone or address details shown there are provided by the business.' },
 ];
 
+const REVIEWS = [
+  { name: 'Ananya R.', area: 'Vellore', tag: 'Groceries', quote: 'I sent the store name and a photo of what I needed. Someone called me the same evening and everything was sorted.' },
+  { name: 'Karthik M.', area: 'Katpadi', tag: 'Medicines', quote: 'Needed medicine for my mother urgently. The team confirmed availability first and kept me updated the whole way.' },
+  { name: 'Divya S.', area: 'Vellore', tag: 'Gifts', quote: 'A birthday gift had to reach my friend across town. It arrived on time and in perfect condition.' },
+  { name: 'Rahul P.', area: 'Bagayam', tag: 'Electronics', quote: 'I was skeptical about requesting a product online, but the process was simple and the updates were genuinely useful.' },
+  { name: 'Meera K.', area: 'Sathyavedu', tag: 'Fashion', quote: 'They picked up the exact pair of shoes from the store I mentioned. No running around, no guesswork.' },
+  { name: 'Vignesh T.', area: 'Vellore', tag: 'Daily needs', quote: 'Clear communication from start to finish. I always knew who to contact and what was happening with my request.' },
+];
+
 const FEATURES = [
   { icon: Zap, title: 'Easy Request', text: 'Tell us what you need' },
   { icon: Store, title: 'Any Store', text: 'From your preferred store' },
@@ -116,6 +125,17 @@ const FEATURES = [
 ];
 
 const HERO_BRAND = 'City Delivery Services';
+
+const MARQUEE_ITEMS = [
+  { icon: Truck, text: 'Doorstep Delivery' },
+  { icon: Store, text: 'Groceries & Daily Needs' },
+  { icon: HeartHandshake, text: 'Medicines & Health' },
+  { icon: Send, text: 'Gifts & Surprises' },
+  { icon: Bike, text: 'Shoes & Fashion' },
+  { icon: Zap, text: 'Electronics & Gadgets' },
+  { icon: ShieldCheck, text: 'Any Store, Any Product' },
+  { icon: BellRing, text: 'On Time, Every Time' },
+];
 
 function Hero() {
   const fade = (d = 0) => ({ initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { delay: d } });
@@ -312,6 +332,52 @@ function Hero() {
         ))}
       </motion.div>
     </section>
+  );
+}
+
+function Marquee() {
+  return (
+    <div
+      className="mq relative overflow-hidden border-y border-[#FFC928]/40 text-white"
+      style={{ background: 'linear-gradient(90deg,#0A6E25 0%,#0F8A2F 50%,#0A6E25 100%)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.25)' }}
+      aria-label="What we can deliver"
+    >
+      <style>{`
+        .mq::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.08) 50%,transparent 65%);background-size:220% 100%;animation:mq-sheen 10s linear infinite}
+        .mq-mask{-webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent)}
+        .mq-track{animation:mq-scroll 38s linear infinite;will-change:transform}
+        .mq:hover .mq-track{animation-play-state:paused}
+        .mq-item{display:inline-flex;align-items:center;gap:.7rem;padding:.15rem 1.7rem;transition:opacity .25s,transform .25s;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+        .mq-item svg{color:#FFE08A;transition:transform .25s}
+        .mq:hover .mq-item{opacity:.45}
+        .mq:hover .mq-item:hover{opacity:1;transform:translateY(-2px)}
+        .mq-item:hover svg{transform:scale(1.12) rotate(-6deg)}
+        @keyframes mq-scroll{to{transform:translateX(-50%)}}
+        @keyframes mq-sheen{to{background-position:-220% 0}}
+        @media (prefers-reduced-motion:reduce){
+          .mq-track,.mq::before{animation:none!important}
+          .mq-item,.mq-item svg{transition:none!important}
+          .mq-mask{-webkit-mask-image:none;mask-image:none;overflow-x:auto}
+        }
+      `}</style>
+      <div className="mq-mask relative">
+        <div className="mq-track flex w-max items-center py-5">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
+              {MARQUEE_ITEMS.map(({ icon: Icon, text }) => (
+                <Fragment key={text}>
+                  <span className="mq-item">
+                    <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
+                    <span className="whitespace-nowrap font-display text-sm font-semibold uppercase tracking-[0.17em] sm:text-[15px]">{text}</span>
+                  </span>
+                  <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-[#FFC928]" aria-hidden="true" />
+                </Fragment>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -725,15 +791,156 @@ function Stats() {
 function CTA() {
   return (
     <section className="px-3 pb-24 sm:px-6 sm:pb-32">
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-brand-dark px-6 py-20 text-center text-white sm:px-16 sm:py-28">
-        <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-brand-yellow/20 blur-3xl" aria-hidden="true" />
-        <div className="absolute -bottom-24 -right-10 h-80 w-80 rounded-full bg-brand-green/40 blur-3xl" aria-hidden="true" />
-        <Reveal>
-          <Zap className="mx-auto text-brand-yellow" size={40} />
-          <h2 className="mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-[1.08] sm:text-6xl">Ready to request your product?</h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-white/70">It takes a couple of minutes. Tell us the product and the store, and we will take it from there.</p>
-          <div className="mt-9"><Button to="/request" size="lg" magnetic>Request a Product <ArrowRight size={20} /></Button></div>
-        </Reveal>
+      <style>{`
+        .cta-panel{background:radial-gradient(60% 90% at 8% 0%,rgba(255,201,40,.16),transparent 65%),radial-gradient(55% 80% at 100% 100%,rgba(15,138,47,.5),transparent 70%),#111713}
+        .cta-grid{background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(circle at 72% 50%,#000 5%,transparent 72%);mask-image:radial-gradient(circle at 72% 50%,#000 5%,transparent 72%)}
+        .cta-orbit{transform:translate(-50%,-50%);animation:cta-spin 30s linear infinite}
+        .cta-card{transform:translate(-50%,-50%);animation:cta-bob 6s ease-in-out infinite}
+        .cta-badge{animation:cta-badge 5s ease-in-out infinite}
+        .cta-dot{animation:cta-pulse 2s ease-out infinite}
+        @keyframes cta-spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+        @keyframes cta-bob{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-12px)}}
+        @keyframes cta-badge{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        @keyframes cta-pulse{0%{box-shadow:0 0 0 0 rgba(255,201,40,.6)}100%{box-shadow:0 0 0 12px rgba(255,201,40,0)}}
+        @media (prefers-reduced-motion:reduce){.cta-orbit,.cta-card,.cta-badge,.cta-dot{animation:none!important}}
+      `}</style>
+      <div className="cta-panel relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-white/10 px-6 py-20 text-white sm:px-12 sm:py-24 lg:px-16">
+        <div className="cta-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[#FFC928]/20 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-32 -right-16 h-96 w-96 rounded-full bg-[#0F8A2F]/30 blur-3xl" aria-hidden="true" />
+
+        <div className="relative grid items-center gap-14 lg:grid-cols-[1.05fr_.95fr]">
+          <Reveal>
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#FFE08A] backdrop-blur">
+              <span className="cta-dot h-2 w-2 rounded-full bg-[#FFC928]" /> Quick &amp; simple
+            </span>
+            <h2 className="mt-7 max-w-xl text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.4rem]">
+              Ready to request <span className="italic text-[#FFC928]">your product?</span>
+            </h2>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">It takes a couple of minutes. Tell us the product and the store, and we will take it from there.</p>
+            <ul className="mt-7 flex flex-wrap gap-x-7 gap-y-3 text-sm text-white/75">
+              {['No sign-up needed', 'We confirm by phone', 'Request ID included'].map((point) => (
+                <li key={point} className="inline-flex items-center gap-2">
+                  <span className="grid h-5 w-5 place-items-center rounded-full bg-[#FFC928]/20 text-[#FFC928]"><Check className="h-3 w-3" strokeWidth={3} /></span>
+                  {point}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-9 flex flex-wrap items-center gap-6">
+              <Button to="/request" size="lg" magnetic>Request a Product <ArrowRight size={20} /></Button>
+              <Link to="/how-it-works" className="inline-flex items-center gap-2 text-sm font-bold text-white/80 underline-offset-4 transition hover:text-[#FFC928] hover:underline">
+                See how it works <ArrowRight size={16} />
+              </Link>
+            </div>
+          </Reveal>
+
+          <div className="relative mx-auto h-[330px] w-full max-w-md sm:h-[380px]" aria-hidden="true">
+            <span className="cta-orbit absolute left-1/2 top-1/2 h-[290px] w-[290px] rounded-full border border-dashed border-white/20 sm:h-[350px] sm:w-[350px]" />
+            <span className="cta-orbit absolute left-1/2 top-1/2 h-[210px] w-[210px] rounded-full border border-white/10" style={{ animationDirection: 'reverse', animationDuration: '19s' }} />
+            <span className="absolute left-1/2 top-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFC928]/20 blur-3xl" />
+
+            <div className="absolute left-1/2 top-1/2 w-[250px] rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-sm sm:w-[292px]" style={{ transform: 'translate(-50%,-50%) rotate(-10deg)' }} />
+            <div className="absolute left-1/2 top-1/2 w-[250px] rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-sm sm:w-[292px]" style={{ transform: 'translate(-50%,-50%) rotate(7deg)' }} />
+
+            <div className="cta-card absolute left-1/2 top-1/2 w-[260px] rounded-3xl bg-white p-5 text-[#16161A] shadow-[0_30px_60px_-20px_rgba(0,0,0,.6)] sm:w-[310px] sm:p-6">
+              <div className="flex items-center justify-between border-b border-black/5 pb-4">
+                <div className="flex items-center gap-2">
+                  <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#0F8A2F] text-white"><ClipboardList className="h-4 w-4" /></span>
+                  <span className="text-sm font-extrabold">New request</span>
+                </div>
+                <span className="rounded-full bg-[#FFF3C4] px-2.5 py-1 text-[9px] font-bold text-[#8a6400]">STEP 1 OF 3</span>
+              </div>
+              <div className="mt-4 space-y-2.5">
+                {[
+                  { icon: Zap, label: 'Product', value: 'What you need' },
+                  { icon: Store, label: 'Store', value: 'Where to pick it up' },
+                  { icon: Truck, label: 'Delivery', value: 'Where it should go' },
+                ].map(({ icon: Icon, label, value }) => (
+                  <div key={label} className="flex items-center gap-3 rounded-xl bg-[#F6F7F4] p-2.5">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white text-[#0F8A2F] shadow-sm"><Icon className="h-4 w-4" /></span>
+                    <span className="min-w-0">
+                      <span className="block text-[9px] font-bold uppercase tracking-wider text-[#8a8a83]">{label}</span>
+                      <span className="block truncate text-xs font-semibold">{value}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#0F8A2F] py-3 text-xs font-bold text-white shadow-[0_4px_0_#0A6B22]">
+                Submit request <ArrowRight className="h-4 w-4" />
+              </div>
+              <p className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-medium text-[#7a7a73]"><ShieldCheck className="h-3 w-3 text-[#0F8A2F]" /> Request ID sent instantly</p>
+            </div>
+
+            <div className="cta-badge absolute -right-1 top-6 flex items-center gap-2 rounded-full bg-[#FFC928] px-4 py-2 text-xs font-bold text-[#16161A] shadow-lg sm:right-0"><PhoneCall className="h-4 w-4" /> We'll call you</div>
+            <div className="cta-badge absolute bottom-6 -left-1 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[#0F8A2F] shadow-lg sm:left-0" style={{ animationDelay: '-2.5s' }}><ShieldCheck className="h-4 w-4" /> No sign-up needed</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Reviews() {
+  return (
+    <section className="relative overflow-hidden py-24 sm:py-22" style={{ background: 'linear-gradient(180deg,#FFFFFF 0%,#F4F9F3 50%,#FFFFFF 100%)' }}>
+      <style>{`
+        .rv-mask{-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
+        .rv-track{animation:rv-scroll 48s linear infinite;will-change:transform}
+        .rv:hover .rv-track,.rv:hover .rv-float{animation-play-state:paused}
+        .rv-float{animation:rv-float 7s ease-in-out infinite;animation-delay:calc(var(--i,0) * -.6s)}
+        .rv-card{transform:perspective(1000px) rotateY(var(--tilt,0deg)) translateZ(0);transform-style:preserve-3d;transition:transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s;will-change:transform}
+        .rv-card:hover{transform:perspective(1000px) rotateY(0deg) translateY(-12px) translateZ(20px) scale(1.02);box-shadow:0 35px 60px -22px rgba(16,24,20,.35)}
+        .rv-pop{transform:translateZ(35px)}
+        @keyframes rv-scroll{to{transform:translateX(-50%)}}
+        @keyframes rv-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        @media (prefers-reduced-motion:reduce){
+          .rv-track,.rv-float{animation:none!important}
+          .rv-card,.rv-pop{transform:none!important;transition:none!important}
+          .rv-mask{-webkit-mask-image:none;mask-image:none;overflow-x:auto}
+        }
+      `}</style>
+
+      <div className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-[#FFC928]/15 blur-3xl" aria-hidden="true" />
+      <div className="pointer-events-none absolute -right-24 bottom-1/4 h-80 w-80 rounded-full bg-[#0F8A2F]/10 blur-3xl" aria-hidden="true" />
+
+      <div className="container-x">
+        <SectionHeading eyebrow="Reviews" title="Kind words from our customers." description="Real requests, real people, and deliveries handled with care." />
+      </div>
+
+      <div className="rv-mask relative mt-14" aria-label="Customer reviews">
+        <div className="rv-track flex w-max py-6">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0 gap-6 pr-6" aria-hidden={copy === 1}>
+              {REVIEWS.map((review, i) => (
+                <div key={`${copy}-${review.name}`} className="rv-float" style={{ '--i': i }}>
+                  <article
+                    className="rv-card relative flex min-h-[268px] w-[290px] flex-col rounded-3xl border border-black/5 bg-white p-7 shadow-[0_18px_50px_-20px_rgba(16,24,20,.25)] sm:w-[350px]"
+                    style={{ '--tilt': i % 2 ? '-6deg' : '6deg' }}
+                  >
+                    <span className="absolute left-8 right-8 top-0 h-1 rounded-b-full bg-gradient-to-r from-[#FFC928] via-[#0F8A2F] to-[#FFC928]" aria-hidden="true" />
+                    <Quote className="absolute right-6 top-6 h-12 w-12 text-[#FFC928]/25" strokeWidth={1.5} aria-hidden="true" />
+                    <div className="rv-pop flex items-center gap-1">
+                      {Array.from({ length: 5 }, (_, s) => <Star key={s} className="h-4 w-4 fill-[#FFC928] text-[#FFC928]" />)}
+                    </div>
+                    <p className="rv-pop mt-5 flex-1 text-[15px] leading-relaxed text-[#4b4b46]">“{review.quote}”</p>
+                    <div className="rv-pop mt-6 flex items-center gap-3 border-t border-black/5 pt-5">
+                      <span
+                        className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-sm font-bold text-white"
+                        style={{ background: i % 2 ? 'linear-gradient(135deg,#B47A00,#FFC928)' : 'linear-gradient(135deg,#0A6E25,#0F8A2F)' }}
+                      >
+                        {review.name.split(' ').map((word) => word[0]).join('').slice(0, 2)}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="truncate font-display text-base font-bold text-[#16161A]">{review.name}</p>
+                        <p className="truncate text-xs text-[#7a7a73]">{review.area} · {review.tag}</p>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -756,6 +963,7 @@ export default function Home() {
         structuredData={[organizationSchema(), websiteSchema(), localBusinessSchema(), serviceSchema(), faqSchema(FAQS)]}
       />
       <Hero />
+      <Marquee />
       <HowItWorks />
       <Gallery />
       <Why />
@@ -767,6 +975,7 @@ export default function Home() {
           <div className="mt-12"><FAQ items={FAQS} /></div>
         </div>
       </section>
+      <Reviews />
       <CTA />
     </Fragment>
   );
