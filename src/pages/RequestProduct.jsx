@@ -211,7 +211,7 @@ export default function RequestProduct() {
       />
       <PageHero
         eyebrow="Request a product"
-        title="Request a Delivery Service in Vellore"
+        title="Request a Delivery Service"
         description="Submit your product, store and delivery details. Our team will review your request and contact you with the next steps."
       />
 
