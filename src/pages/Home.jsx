@@ -16,6 +16,68 @@ import responsiveHeroBackground from '../assets/resposiveImage.png';
 const GREEN = '#0F8A2F';
 const DARK = '#16161A';
 
+/*
+  GALLERY IMAGES
+  Drop any number of images (svg / png / jpg / jpeg / webp) into:  src/assets/GalleryImages/
+  They are picked up automatically (sorted by file name) and shown in the gallery section.
+  If the folder is empty, the two hero images are used so the section is never blank.
+  (Uses Vite's import.meta.glob.)
+*/
+const galleryModules = import.meta.glob('../assets/GalleryImages/*.{png,jpg,jpeg,webp,svg,PNG,JPG,JPEG,WEBP,SVG}', { eager: true, import: 'default' });
+const galleryFiles = Object.keys(galleryModules).sort().map((k) => galleryModules[k]);
+
+const GALLERY_CAPTIONS = [
+  { title: 'Doorstep delivery', text: 'Right to your door, hassle free' },
+  { title: 'Groceries & daily needs', text: 'Fresh picks from your favourite store' },
+  { title: 'Medicines & health', text: 'When you need it most' },
+  { title: 'Gifts & surprises', text: 'Delivered with a smile' },
+  { title: 'Shoes & fashion', text: 'Any store, any product' },
+  { title: 'Electronics & gadgets', text: 'Handled with care' },
+  { title: 'Friendly couriers', text: 'Real people, real support' },
+  { title: 'On time, every time', text: "We'll keep you posted" },
+];
+
+// Layout pattern (repeats every 8 tiles). 2 columns on phones, 4 columns from md up.
+const GALLERY_SPANS = [
+  'col-span-2 row-span-2', // big feature tile
+  '',
+  '',
+  '',
+  '',
+  'col-span-2', // wide tile
+  '',
+  '',
+];
+
+/*
+  Only 2 artwork images exist today, so extra tiles are made by zooming into different
+  parts of them. `zoom` = magnification, `origin` = the point that is zoomed into
+  (x% y%). Tweak these numbers if a crop frames the wrong object.
+  Real photos you add to src/assets/gallery/ are shown first and replace these crops.
+*/
+const GALLERY_CROPS = [
+  { src: heroVisual, zoom: 1, origin: '50% 50%' },
+  { src: heroVisual, zoom: 2.3, origin: '28% 72%' },
+  { src: heroVisual, zoom: 2.3, origin: '72% 28%' },
+  { src: heroVisual, zoom: 2.3, origin: '50% 88%' },
+  { src: heroVisual, zoom: 2.3, origin: '88% 72%' },
+  { src: responsiveHeroBackground, zoom: 1, origin: '50% 50%' },
+  { src: responsiveHeroBackground, zoom: 2, origin: '20% 40%' },
+  { src: responsiveHeroBackground, zoom: 2, origin: '80% 65%' },
+];
+
+const GALLERY_MIN = 8;
+const GALLERY_SOURCES = [
+  ...galleryFiles.map((src) => ({ src, zoom: 1, origin: '50% 50%' })),
+  ...GALLERY_CROPS.slice(0, Math.max(0, GALLERY_MIN - galleryFiles.length)),
+];
+
+const GALLERY_ITEMS = GALLERY_SOURCES.map((g, i) => ({
+  ...g,
+  ...GALLERY_CAPTIONS[i % GALLERY_CAPTIONS.length],
+  span: GALLERY_SPANS[i % GALLERY_SPANS.length],
+}));
+
 const STEPS = [
   { icon: ClipboardList, title: 'Tell us the product', text: 'Name it, describe it, add a photo if you have one.' },
   { icon: Store, title: 'Share the store', text: 'Tell us which store it is from and where to find it.' },
@@ -361,6 +423,74 @@ function HowItWorks() {
   );
 }
 
+function Gallery() {
+  return (
+    <section id="gallery" className="gal relative overflow-hidden py-24 sm:py-32" style={{ background: 'linear-gradient(180deg,#FFFFFF 0%,#FFF6D6 100%)' }}>
+      <style>{`
+        .gal-item{position:relative;overflow:hidden;border-radius:1.25rem;background:linear-gradient(135deg,#FFE88F,#FED45D);box-shadow:0 22px 40px -18px rgba(120,80,0,.4);transition:transform .35s ease,box-shadow .35s ease}
+        @media (min-width:640px){.gal-item{border-radius:1.5rem}}
+        .gal-item:hover{transform:translateY(-6px);box-shadow:0 34px 60px -20px rgba(180,120,0,.55),0 0 0 3px rgba(255,201,40,.85)}
+        .gal-img{width:100%;height:100%;object-fit:cover;object-position:var(--o,50% 50%);transform:scale(var(--z,1));transform-origin:var(--o,50% 50%);transition:transform .8s ease}
+        .gal-item:hover .gal-img{transform:scale(calc(var(--z,1) * 1.08))}
+        .gal-cap{position:absolute;inset:auto 0 0 0;padding:2.5rem 1.1rem 1rem;background:linear-gradient(to top,rgba(22,22,26,.85),rgba(22,22,26,0));transform:translateY(32%);opacity:.92;transition:transform .4s ease,opacity .4s ease}
+        .gal-item:hover .gal-cap{transform:translateY(0);opacity:1}
+        .gal-shine{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit}
+        .gal-shine::after{content:"";position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%);transform:translateX(-130%);transition:transform .9s}
+        .gal-item:hover .gal-shine::after{transform:translateX(130%)}
+        @keyframes gal-orb{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30px,35px) scale(1.12)}}
+        .gal-orb{animation:gal-orb 9s ease-in-out infinite}
+        @media (hover:none){.gal-cap{transform:translateY(0)}}
+        @media (prefers-reduced-motion:reduce){.gal *{animation:none!important;transition:none!important}}
+      `}</style>
+
+      <div className="gal-orb pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full bg-[#FFC928]/30 blur-3xl" aria-hidden="true" />
+      <div className="gal-orb pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-[#0F8A2F]/15 blur-3xl" style={{ animationDelay: '-4s' }} aria-hidden="true" />
+
+      <div className="container-x relative">
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#FFC928]/30 px-4 py-1.5 text-sm font-bold text-[#16161A]">
+            <span className="h-2 w-2 rounded-full bg-[#0F8A2F]" /> Our gallery
+          </span>
+          <h2 className="mt-5 text-4xl font-extrabold tracking-tight text-[#16161A] sm:text-5xl">
+            City Delivery, <span className="italic text-[#0F8A2F]">in pictures.</span>
+          </h2>
+          <p className="mt-4 text-lg text-[#5b5a55]">A glimpse of the products, stores and everyday moments we help bring to your door.</p>
+        </motion.div>
+
+        <div className="mt-12 grid grid-flow-dense auto-rows-[140px] grid-cols-2 gap-3 sm:mt-16 sm:auto-rows-[200px] sm:gap-4 md:auto-rows-[190px] md:grid-cols-4 md:gap-5 lg:auto-rows-[220px]">
+          {GALLERY_ITEMS.map((g, i) => (
+            <motion.figure
+              key={`${g.title}-${i}`}
+              initial={{ opacity: 0, y: 50, scale: 0.94 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ type: 'spring', stiffness: 70, damping: 15, delay: (i % 4) * 0.1 }}
+              className={`gal-item m-0 ${g.span}`}
+            >
+              <img src={g.src} alt={`${g.title} — ${HERO_BRAND}`} loading="lazy" draggable="false" className="gal-img select-none" style={{ '--z': g.zoom, '--o': g.origin }} />
+              <span className="gal-shine" aria-hidden="true" />
+              <figcaption className="gal-cap">
+                <strong className="block text-sm font-extrabold text-white sm:text-base">{g.title}</strong>
+                <span className="mt-0.5 block text-xs text-white/80 sm:text-sm">{g.text}</span>
+              </figcaption>
+            </motion.figure>
+          ))}
+        </div>
+
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }} className="mt-14 text-center">
+          <Link
+            to="/request"
+            className="inline-flex items-center justify-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white transition-transform hover:-translate-y-1 active:translate-y-1"
+            style={{ background: 'linear-gradient(180deg,#19A23E,#0F8A2F)', boxShadow: '0 6px 0 #0A6B22,0 16px 26px rgba(15,138,47,.4),inset 0 2px 0 rgba(255,255,255,.3)' }}
+          >
+            Request a Product <ArrowRight className="h-5 w-5" />
+          </Link>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function Why() {
   return (
     // Paste this <section> as the return value of your Why component.
@@ -620,6 +750,7 @@ export default function Home() {
     <Fragment key={animationKey}>
       <Hero />
       <HowItWorks />
+      <Gallery />
       <Why />
       <ProcessIllustration />
       <Stats />
