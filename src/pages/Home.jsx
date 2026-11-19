@@ -452,7 +452,7 @@ function Gallery() {
             <span className="h-2 w-2 rounded-full bg-[#0F8A2F]" /> Our gallery
           </span>
           <h2 className="mt-5 text-4xl font-extrabold tracking-tight text-[#16161A] sm:text-5xl">
-            City Delivery, <span className="italic text-[#0F8A2F]">in pictures.</span>
+            City Delivery Services, <span className="italic text-[#0F8A2F]">in pictures.</span>
           </h2>
           <p className="mt-4 text-lg text-[#5b5a55]">A glimpse of the products, stores and everyday moments we help bring to your door.</p>
         </motion.div>
