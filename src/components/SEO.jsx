@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const SITE_URL = 'https://citydeliveryservices.com';
+export const SITE_URL = 'https://www.citydeliveryservices.com';
 const DEFAULT_IMAGE = `${SITE_URL}/Logo1.png`;
 
 function setMeta(attribute, key, content) {

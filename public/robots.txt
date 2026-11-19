@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://citydeliveryservices.com/sitemap.xml
+Sitemap: https://www.citydeliveryservices.com/sitemap.xml
