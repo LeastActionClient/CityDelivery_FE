@@ -173,6 +173,22 @@ function Hero() {
         .hv-btn:active{transform:translateY(3px)}
         .hv-feat{transition:transform .3s;transform-style:preserve-3d}
         .hv-feat:hover{transform:perspective(500px) rotateY(10deg) translateY(-4px)}
+        .hv-dots{background-image:radial-gradient(rgba(90,70,10,.2) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:linear-gradient(to right,transparent 35%,#000 78%);mask-image:linear-gradient(to right,transparent 35%,#000 78%)}
+        @media (max-width:1023px){.hv-dots{-webkit-mask-image:linear-gradient(to bottom,transparent 6%,#000 42%,transparent 94%);mask-image:linear-gradient(to bottom,transparent 6%,#000 42%,transparent 94%)}}
+        .hv-bg{animation:hv-bg 18s ease-in-out infinite alternate}
+        .hv-orb{animation:hv-orb 8s ease-in-out infinite}
+        .hv-chip{transform:translateZ(var(--z,40px));animation:hv-chip 5s ease-in-out infinite;animation-delay:var(--d,0s)}
+        .hv-live{animation:hv-live 2s ease-in-out infinite}
+        .hv-btn{position:relative;overflow:hidden}
+        .hv-btn::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.3) 50%,transparent 65%);transform:translateX(-120%);animation:hv-sheen 5s ease-in-out infinite}
+        .hv-btn:hover::after,.hv-btn:focus-visible::after{animation-play-state:paused}
+        .hv-scroll{animation:hv-scroll 2s ease-in-out infinite}
+        @keyframes hv-bg{from{transform:scale(1)}to{transform:scale(1.06)}}
+        @keyframes hv-orb{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.14)}}
+        @keyframes hv-chip{0%,100%{transform:translateZ(var(--z,40px)) translateY(0)}50%{transform:translateZ(var(--z,40px)) translateY(-9px)}}
+        @keyframes hv-live{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.82)}}
+        @keyframes hv-sheen{0%,55%{transform:translateX(-120%)}75%,100%{transform:translateX(120%)}}
+        @keyframes hv-scroll{0%{transform:translateY(-100%)}100%{transform:translateY(250%)}}
         .hv-img{-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 24%);mask-image:linear-gradient(to bottom,transparent 0%,#000 24%)}
         @media (min-width:1024px){.hv-img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 6%),linear-gradient(to bottom,transparent 0%,#000 4%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent 0%,#000 6%),linear-gradient(to bottom,transparent 0%,#000 4%);mask-composite:intersect}}
         @keyframes hv-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.1%)}}
@@ -185,9 +201,14 @@ function Hero() {
 
       {/* Full-bleed hero artwork on responsive screens */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-full sm:top-20 lg:hidden" aria-hidden="true">
-        <img src={responsiveHeroBackground} alt="" className="h-full w-full object-cover object-center" />
-        <div className="absolute inset-0 bg-white/10" />
+        <img src={responsiveHeroBackground} alt="" className="hv-bg h-full w-full object-cover object-center" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(254,232,143,.72) 0%,rgba(254,232,143,.18) 34%,rgba(254,241,196,.22) 58%,rgba(254,241,196,.88) 100%)' }} />
       </div>
+
+      {/* depth layers */}
+      <div className="hv-dots pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
+      <span className="hv-orb pointer-events-none absolute -right-16 top-[5%] h-40 w-40 rounded-full bg-white/50 blur-3xl sm:h-56 sm:w-56 lg:right-[6%] lg:h-64 lg:w-64" aria-hidden="true" />
+      <span className="hv-orb pointer-events-none absolute -left-16 bottom-[24%] h-40 w-40 rounded-full bg-[#0F8A2F]/20 blur-3xl sm:h-52 sm:w-52 lg:bottom-[2%] lg:left-auto lg:right-[28%] lg:h-56 lg:w-56" style={{ animationDelay: '-3s' }} aria-hidden="true" />
 
       {/* drifting sparkles */}
       {[
@@ -214,6 +235,31 @@ function Hero() {
             className="hv-img relative block w-full select-none"
           />
         </div>
+
+        {/* floating service cards */}
+        <div className="hv-chip pointer-events-none absolute left-[7%] top-[13%] hidden items-center gap-3 rounded-2xl border border-white/80 bg-white/90 px-4 py-3 shadow-[0_18px_35px_-12px_rgba(60,50,0,.35)] backdrop-blur-md lg:flex" style={{ '--z': '70px', '--d': '-.5s' }}>
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#E7F6EA] text-[#0F8A2F]"><Store className="h-5 w-5" /></span>
+          <span className="text-left">
+            <span className="block text-sm font-extrabold text-[#16161A]">Groceries &amp; daily needs</span>
+            <span className="block text-[11px] font-medium text-[#7a7a73]">From your favourite store</span>
+          </span>
+        </div>
+
+        <div className="hv-chip pointer-events-none absolute right-[1%] top-[40%] hidden items-center gap-3 rounded-2xl border border-white/80 bg-white/90 px-4 py-3 shadow-[0_18px_35px_-12px_rgba(60,50,0,.35)] backdrop-blur-md lg:flex" style={{ '--z': '100px', '--d': '-2s' }}>
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#FFF3C4] text-[#8a6400]"><HeartHandshake className="h-5 w-5" /></span>
+          <span className="text-left">
+            <span className="block text-sm font-extrabold text-[#16161A]">Medicines &amp; health</span>
+            <span className="block text-[11px] font-medium text-[#7a7a73]">When you need it most</span>
+          </span>
+        </div>
+
+        <div className="hv-chip pointer-events-none absolute bottom-[13%] left-[16%] hidden items-center gap-3 rounded-2xl border border-white/80 bg-white/90 px-4 py-3 shadow-[0_18px_35px_-12px_rgba(60,50,0,.35)] backdrop-blur-md lg:flex" style={{ '--z': '55px', '--d': '-3.5s' }}>
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#E7F6EA] text-[#0F8A2F]"><Send className="h-5 w-5" /></span>
+          <span className="text-left">
+            <span className="block text-sm font-extrabold text-[#16161A]">Gifts &amp; surprises</span>
+            <span className="block text-[11px] font-medium text-[#7a7a73]">Delivered with a smile</span>
+          </span>
+        </div>
       </div>
 
       {/* Content */}
@@ -224,6 +270,7 @@ function Hero() {
           transition={{ type: 'spring', stiffness: 120, damping: 12 }}
           className="inline-flex items-center gap-3 rounded-full bg-[#FFEFA3]/90 px-5 py-2.5 text-base font-bold text-[#16161A] shadow-sm lg:gap-[0.7vw] lg:px-[1.3vw] lg:py-[0.65vw] lg:text-[0.98vw]"
         >
+          <span className="hv-live h-2.5 w-2.5 shrink-0 rounded-full bg-[#0F8A2F]" />
           <Truck className="hv-icon h-5 w-5 lg:h-[1.4vw] lg:w-[1.4vw]" /> Product Request &amp; Delivery Service
         </motion.span>
 
@@ -274,19 +321,35 @@ function Hero() {
         >
           <Link
             to="/request"
-            className="hv-btn inline-flex items-center justify-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white lg:h-[4.1vw] lg:gap-[0.9vw] lg:rounded-[1.1vw] lg:px-[2.3vw] lg:py-0 lg:text-[1.35vw]"
+            className="hv-btn inline-flex w-full items-center justify-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white sm:w-auto lg:h-[4.1vw] lg:gap-[0.9vw] lg:rounded-[1.1vw] lg:px-[2.3vw] lg:py-0 lg:text-[1.35vw]"
             style={{ background: 'linear-gradient(180deg,#19A23E,#0F8A2F)', boxShadow: '0 6px 0 #0A6B22,0 16px 26px rgba(15,138,47,.4),inset 0 2px 0 rgba(255,255,255,.3)' }}
           >
             Request a Product <ArrowRight className="h-5 w-5 lg:h-[1.5vw] lg:w-[1.5vw]" />
           </Link>
           <Link
             to="/how-it-works"
-            className="hv-btn hv-btn-alt inline-flex items-center justify-center gap-3 rounded-2xl border-2 border-[#FFE9A0] bg-white px-8 py-4 text-lg font-bold text-[#16161A] lg:h-[4.1vw] lg:gap-[0.9vw] lg:rounded-[1.1vw] lg:px-[2.3vw] lg:py-0 lg:text-[1.35vw]"
+            className="hv-btn hv-btn-alt inline-flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#FFE9A0] bg-white px-8 py-4 text-lg font-bold text-[#16161A] sm:w-auto lg:h-[4.1vw] lg:gap-[0.9vw] lg:rounded-[1.1vw] lg:px-[2.3vw] lg:py-0 lg:text-[1.35vw]"
             style={{ boxShadow: '0 6px 0 #F3D56B,0 16px 24px rgba(0,0,0,.08)' }}
           >
             How It Works <Play className="h-5 w-5 lg:h-[1.4vw] lg:w-[1.4vw]" />
           </Link>
         </motion.div>
+
+        <div className="mt-7 flex flex-wrap gap-2.5 lg:hidden">
+          {[
+            { icon: Store, label: 'Groceries', delay: '-.4s' },
+            { icon: HeartHandshake, label: 'Medicines', delay: '-1.6s' },
+            { icon: Send, label: 'Gifts', delay: '-2.8s' },
+          ].map(({ icon: Icon, label, delay }) => (
+            <span
+              key={label}
+              className="hv-chip inline-flex items-center gap-2 rounded-full border border-[#E8B93A]/70 bg-white/85 px-3.5 py-2 text-xs font-bold text-[#16161A] shadow-sm backdrop-blur-sm sm:text-sm"
+              style={{ '--d': delay, '--z': '0px' }}
+            >
+              <Icon className="h-4 w-4 text-[#0F8A2F]" /> {label}
+            </span>
+          ))}
+        </div>
 
         <ul className="mt-9 hidden flex-wrap items-stretch gap-y-6 lg:mt-[3vw] lg:flex lg:flex-nowrap">
           {[
@@ -331,6 +394,13 @@ function Hero() {
           </motion.span>
         ))}
       </motion.div>
+
+      <div className="pointer-events-none absolute bottom-7 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-[#6b5a20] lg:flex" aria-hidden="true">
+        <span className="text-[10px] font-bold uppercase tracking-[0.25em]">Explore</span>
+        <span className="relative h-10 w-[2px] overflow-hidden rounded-full bg-[#0F8A2F]/25">
+          <span className="hv-scroll absolute left-0 top-0 h-4 w-full rounded-full bg-[#0F8A2F]" />
+        </span>
+      </div>
     </section>
   );
 }
