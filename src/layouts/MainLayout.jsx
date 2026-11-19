@@ -21,7 +21,7 @@ export default function MainLayout() {
       </a>
       <Navbar />
       <main id="main" className="flex-1">
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence mode="wait">
           <motion.div key={pathname} variants={pageVariants} initial="initial" animate="animate" exit="exit">
             {outlet}
           </motion.div>

@@ -1,3 +1,4 @@
+import { Fragment, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ClipboardList, Store, Send, BellRing, PhoneCall, MousePointerClick, ShieldCheck, Zap, HeartHandshake, Truck, Play, Bike } from 'lucide-react';
@@ -608,8 +609,15 @@ function CTA() {
 }
 
 export default function Home() {
+  const [animationKey, setAnimationKey] = useState(0);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setAnimationKey((key) => key + 1));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   return (
-    <>
+    <Fragment key={animationKey}>
       <Hero />
       <HowItWorks />
       <Why />
@@ -622,6 +630,6 @@ export default function Home() {
         </div>
       </section>
       <CTA />
-    </>
+    </Fragment>
   );
 }
