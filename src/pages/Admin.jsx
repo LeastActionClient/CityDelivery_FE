@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { ApiError, getAdminRequests, updateAdminRequestStatus } from '../services/api.js';
 import responsiveHeroBackground from '../assets/resposiveImage.png';
+import SEO from '../components/SEO.jsx';
 
 const STORAGE_KEY = 'city-delivery-admin-api-key';
 const STATUSES = ['Pending', 'Reviewing', 'Contacted', 'Completed', 'Cancelled'];
@@ -260,10 +261,19 @@ export default function Admin() {
     setItems([]);
   };
 
-  if (!apiKey) return <Login onLogin={login} error={loginError} busy={checking} />;
+  if (!apiKey) {
+    return (
+      <>
+        <SEO title="Admin Login | City Delivery Services" description="Private administration area." path="/admin" noindex />
+        <Login onLogin={login} error={loginError} busy={checking} />
+      </>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-brand-light px-4 py-6 sm:px-8 sm:py-10">
+    <>
+      <SEO title="Admin | City Delivery Services" description="Private administration area." path="/admin" noindex />
+      <main className="min-h-screen bg-brand-light px-4 py-6 sm:px-8 sm:py-10">
       <div className="mx-auto max-w-6xl">
         <header className="flex flex-col gap-5 rounded-4xl bg-brand-dark p-6 text-white shadow-lift sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
@@ -311,6 +321,7 @@ export default function Admin() {
           </div>
         )}
       </div>
-    </main>
+      </main>
+    </>
   );
 }

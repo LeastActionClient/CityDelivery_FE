@@ -9,6 +9,7 @@ import { Reveal, Stagger, StaggerItem } from '../components/Reveal.jsx';
 import TiltCard from '../components/TiltCard.jsx';
 import Counter from '../components/Counter.jsx';
 import FAQ from '../components/FAQ.jsx';
+import SEO, { faqSchema, localBusinessSchema, organizationSchema, serviceSchema, websiteSchema } from '../components/SEO.jsx';
 // Put the image at src/assets/hero-visual.png
 import heroVisual from '../assets/image.png';
 import responsiveHeroBackground from '../assets/resposiveImage.png';
@@ -241,7 +242,7 @@ function Hero() {
           transition={{ delay: 0.6, duration: 0.6 }}
           className="mt-8 max-w-lg text-lg leading-relaxed text-[#5b5a55] sm:text-xl lg:mt-[2.2vw] lg:max-w-[40vw] lg:text-[1.45vw] lg:leading-[1.38]"
         >
-          Tell us what you need and where you want it from. {' '} 
+          Tell us what you need and where you want it from. {' '}
           <strong className="font-bold text-[#16161A]">simple and convenient.</strong>
         </motion.p>
 
@@ -748,6 +749,12 @@ export default function Home() {
 
   return (
     <Fragment key={animationKey}>
+      <SEO
+        title="City Delivery Services — Your Product. Your Store. Delivered with Ease."
+        description="Looking for city delivery services in Vellore? Submit your product and store details through City Delivery Services and connect with our delivery service team."
+        path="/"
+        structuredData={[organizationSchema(), websiteSchema(), localBusinessSchema(), serviceSchema(), faqSchema(FAQS)]}
+      />
       <Hero />
       <HowItWorks />
       <Gallery />

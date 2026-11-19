@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, Loader2, CheckCircle2, AlertTriangle, Instagram, Facebook, Twitter, MessageCircle, ArrowRight } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
+import SEO, { breadcrumbSchema } from '../components/SEO.jsx';
 import Field from '../components/form/Field.jsx';
 import Button from '../components/Button.jsx';
 import { Reveal } from '../components/Reveal.jsx';
@@ -57,6 +58,12 @@ export default function Contact() {
 
   return (
     <>
+      <SEO
+        title="Contact City Delivery Services in Vellore"
+        description="Contact City Delivery Services in Vellore about a product request, local delivery question, or service information."
+        path="/contact"
+        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Contact Us', path: '/contact' }])]}
+      />
       <PageHero eyebrow="Contact us" title="We would love to hear from you." description="Questions about a request or how the service works? Send us a message and our team will get back to you." />
 
       <section className="pb-24">

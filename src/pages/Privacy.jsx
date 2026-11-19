@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageHero from '../components/PageHero.jsx';
+import SEO, { breadcrumbSchema } from '../components/SEO.jsx';
 import { SITE } from '../utils/config.js';
 
 const UPDATED = 'November 2026';
@@ -56,6 +57,12 @@ const SECTIONS = [
 export default function Privacy() {
   return (
     <>
+      <SEO
+        title="Privacy Policy | City Delivery Services"
+        description="Read the City Delivery Services privacy policy for product requests, contact messages, images and service communications in Vellore."
+        path="/privacy"
+        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy', path: '/privacy' }])]}
+      />
       <PageHero eyebrow="Legal" title="Privacy Policy" description={`Last updated: ${UPDATED}`} />
       <section className="pb-24">
         <div className="container-x max-w-3xl">

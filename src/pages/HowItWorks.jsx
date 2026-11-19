@@ -2,6 +2,7 @@ import { motion, useScroll, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { ClipboardList, Store, Send, BellRing, PhoneCall, ArrowRight } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
+import SEO, { breadcrumbSchema } from '../components/SEO.jsx';
 import Button from '../components/Button.jsx';
 import { Reveal } from '../components/Reveal.jsx';
 
@@ -9,7 +10,7 @@ const STEPS = [
   { icon: ClipboardList, title: 'Tell us what product you need', text: 'Give the product a name, choose a category and describe it — brand, size, colour. Add a photo if it helps.' },
   { icon: Store, title: 'Share the store information', text: 'Tell us the store name and where it is located so we know exactly where to look.' },
   { icon: Send, title: 'Submit your request', text: 'Add your delivery address and contact details, then press submit. You instantly receive a unique Request ID.' },
-  { icon: BellRing, title: 'Our team receives your request', text: 'Your request is saved and our team is notified by email with every detail you provided. You get a confirmation email too.' },
+  { icon: BellRing, title: 'Our team receives your request', text: 'Your request is saved and our team is notified with every detail you provided. If you add an email address, you get a confirmation email too.' },
   { icon: PhoneCall, title: 'Our team contacts you with the next steps', text: 'A team member reviews the request and reaches out to confirm details, availability and what happens next.' },
 ];
 
@@ -20,6 +21,12 @@ export default function HowItWorks() {
 
   return (
     <>
+      <SEO
+        title="How City Delivery Services Works | Vellore Requests"
+        description="See how to submit a product and store delivery request in Vellore, from entering details to receiving confirmation from our team."
+        path="/how-it-works"
+        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'How It Works', path: '/how-it-works' }])]}
+      />
       <PageHero eyebrow="How it works" title="From idea to inbox in five steps." description="A clear, honest process. Submitting a request starts the conversation — our team confirms everything with you directly." />
 
       <section className="pb-24">

@@ -2,10 +2,13 @@ import { motion } from 'framer-motion';
 import Button from '../components/Button.jsx';
 import FloatingShapes from '../components/FloatingShapes.jsx';
 import { LogoMark } from '../components/Logo.jsx';
+import SEO from '../components/SEO.jsx';
 
 export default function NotFound() {
   return (
-    <section className="relative grid min-h-screen place-items-center overflow-hidden px-5 pt-24 text-center">
+    <>
+      <SEO title="Page Not Found | City Delivery Services" description="The requested City Delivery Services page could not be found." path="/404" noindex />
+      <section className="relative grid min-h-screen place-items-center overflow-hidden px-5 pt-24 text-center">
       <FloatingShapes />
       <div>
         <motion.div animate={{ y: [0, -12, 0], rotate: [0, -4, 4, 0] }} transition={{ duration: 5, repeat: Infinity }} className="mx-auto w-fit">
@@ -18,6 +21,7 @@ export default function NotFound() {
           <Button to="/request" variant="outline">Request a Product</Button>
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }
