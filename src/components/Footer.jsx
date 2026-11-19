@@ -175,6 +175,8 @@ export default function Footer() {
                 src="https://www.doormartdelivery.in/assets/leastactionlogo-SbXcJl_q.png"
                 alt="Least Action"
                 className="h-10 w-10 rounded-lg object-contain"
+                loading="lazy"
+                decoding="async"
               />
             </a>
             <span>

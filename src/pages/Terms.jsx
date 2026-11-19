@@ -1,5 +1,5 @@
 import PageHero from '../components/PageHero.jsx';
-import SEO, { SITE_URL, breadcrumbSchema } from '../components/SEO.jsx';
+import SEO, { SITE_URL, breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 
 const SECTIONS = [
   { title: '1. Request-based service', text: 'City Delivery Services helps you submit a product and delivery request. A request starts a conversation with our team; it is not an automatic order or a guarantee that an item is available.' },
@@ -13,10 +13,20 @@ export default function Terms() {
   return (
     <>
       <SEO
-        title="Terms and Conditions | City Delivery Services"
-        description="Read the terms for submitting product and delivery requests to City Delivery Services in Vellore."
+        title="Terms and Conditions | City Delivery Services Vellore"
+        description="Read the terms for submitting product and delivery requests to City Delivery Services in Vellore, Tamil Nadu."
         path="/terms"
-        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Terms and Conditions', path: '/terms' }])]}
+        structuredData={[
+          businessSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: '/terms',
+            name: 'Terms and Conditions',
+            description: 'Read the terms for submitting product and delivery requests to City Delivery Services in Vellore, Tamil Nadu.',
+            breadcrumb: true,
+          }),
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Terms and Conditions', path: '/terms' }], '/terms'),
+        ]}
       />
       <PageHero eyebrow="Legal" title="Terms and Conditions" description="The basic terms for using our request-based delivery service." />
       <section className="pb-24">

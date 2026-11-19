@@ -9,7 +9,7 @@ import { Reveal, Stagger, StaggerItem } from '../components/Reveal.jsx';
 import TiltCard from '../components/TiltCard.jsx';
 import Counter from '../components/Counter.jsx';
 import FAQ from '../components/FAQ.jsx';
-import SEO, { faqSchema, localBusinessSchema, organizationSchema, serviceSchema, websiteSchema } from '../components/SEO.jsx';
+import SEO, { businessSchema, faqSchema, serviceSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 // Put the image at src/assets/hero-visual.png
 import heroVisual from '../assets/image.png';
 import responsiveHeroBackground from '../assets/resposiveImage.png';
@@ -201,7 +201,7 @@ function Hero() {
 
       {/* Full-bleed hero artwork on responsive screens */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-full sm:top-20 lg:hidden" aria-hidden="true">
-        <img src={responsiveHeroBackground} alt="" className="hv-bg h-full w-full object-cover object-center" />
+        <img src={responsiveHeroBackground} alt="" className="hv-bg h-full w-full object-cover object-center" fetchpriority="high" decoding="async" />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(254,232,143,.72) 0%,rgba(254,232,143,.18) 34%,rgba(254,241,196,.22) 58%,rgba(254,241,196,.88) 100%)' }} />
       </div>
 
@@ -229,6 +229,8 @@ function Hero() {
             src={heroVisual}
             alt="City Delivery Services courier on a yellow scooter with groceries, headphones, shoes, medicine and gifts"
             draggable="false"
+            fetchpriority="high"
+            decoding="async"
             initial={{ opacity: 0, scale: 0.94, x: 60 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: 'easeOut' }}
@@ -604,7 +606,7 @@ function Gallery() {
               transition={{ type: 'spring', stiffness: 70, damping: 15, delay: (i % 4) * 0.1 }}
               className={`gal-item m-0 ${g.span}`}
             >
-              <img src={g.src} alt={`${g.title} — ${HERO_BRAND}`} loading="lazy" draggable="false" className="gal-img select-none" style={{ '--z': g.zoom, '--o': g.origin }} />
+              <img src={g.src} alt={`${g.title} — ${HERO_BRAND}`} loading="lazy" decoding="async" draggable="false" className="gal-img select-none" style={{ '--z': g.zoom, '--o': g.origin }} />
               <span className="gal-shine" aria-hidden="true" />
               <figcaption className="gal-cap">
                 <strong className="block text-sm font-extrabold text-white sm:text-base">{g.title}</strong>
@@ -1027,10 +1029,20 @@ export default function Home() {
   return (
     <Fragment key={animationKey}>
       <SEO
-        title="City Delivery Services — Your Product. Your Store. Delivered with Ease."
-        description="Looking for city delivery services in Vellore? Submit your product and store details through City Delivery Services and connect with our delivery service team."
+        title="City Delivery Services in Vellore | Reliable Local Delivery"
+        description="Looking for reliable city delivery services in Vellore? City Delivery Services helps customers access convenient local delivery solutions in Vellore, Tamil Nadu."
         path="/"
-        structuredData={[organizationSchema(), websiteSchema(), localBusinessSchema(), serviceSchema(), faqSchema(FAQS)]}
+        structuredData={[
+          businessSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: '/',
+            name: 'City Delivery Services in Vellore',
+            description: 'Looking for reliable city delivery services in Vellore? City Delivery Services helps customers access convenient local delivery solutions in Vellore, Tamil Nadu.',
+          }),
+          serviceSchema(),
+          faqSchema(FAQS),
+        ]}
       />
       <Hero />
       <Marquee />

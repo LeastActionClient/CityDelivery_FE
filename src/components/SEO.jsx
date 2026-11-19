@@ -1,7 +1,17 @@
 import { useEffect } from 'react';
 
 export const SITE_URL = 'https://www.citydeliveryservices.com';
+const SITE_NAME = 'City Delivery Services';
 const DEFAULT_IMAGE = `${SITE_URL}/Logo1.png`;
+const SITE_EMAIL = 'citydeliveryservicesofficial@gmail.com';
+const SITE_PHONE = '+918189800888';
+const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+const WEBSITE_ID = `${SITE_URL}/#website`;
+
+export function absoluteUrl(path = '/') {
+  const clean = path === '/' ? '/' : `/${String(path).replace(/^\/+|\/+$/g, '')}`;
+  return `${SITE_URL}${clean}`;
+}
 
 function setMeta(attribute, key, content) {
   let element = document.head.querySelector(`meta[${attribute}="${key}"]`);
@@ -32,16 +42,20 @@ export default function SEO({
   noindex = false,
   structuredData = [],
 }) {
-  const structuredDataJson = JSON.stringify(structuredData);
+  const canonical = absoluteUrl(path);
+  const structuredDataJson = JSON.stringify(
+    structuredData.length ? { '@context': 'https://schema.org', '@graph': structuredData } : null
+  );
 
   useEffect(() => {
-    const canonical = `${SITE_URL}${path === '/' ? '/' : path}`;
     document.title = title;
     setMeta('name', 'description', description);
     setMeta('name', 'robots', noindex ? 'noindex,nofollow' : 'index,follow');
     setMeta('property', 'og:title', title);
     setMeta('property', 'og:description', description);
     setMeta('property', 'og:type', type);
+    setMeta('property', 'og:site_name', SITE_NAME);
+    setMeta('property', 'og:locale', 'en_IN');
     setMeta('property', 'og:url', canonical);
     setMeta('property', 'og:image', image);
     setMeta('name', 'twitter:card', 'summary_large_image');
@@ -52,7 +66,7 @@ export default function SEO({
 
     const existing = document.head.querySelector('#site-seo-jsonld');
     if (existing) existing.remove();
-    if (structuredDataJson !== '[]') {
+    if (structuredData.length) {
       const script = document.createElement('script');
       script.id = 'site-seo-jsonld';
       script.type = 'application/ld+json';
@@ -64,47 +78,21 @@ export default function SEO({
       const jsonLd = document.head.querySelector('#site-seo-jsonld');
       if (jsonLd) jsonLd.remove();
     };
-  }, [description, image, noindex, path, structuredDataJson, title, type]);
+  }, [canonical, description, image, noindex, structuredData.length, structuredDataJson, title, type]);
 
   return null;
 }
 
-export function breadcrumbSchema(items) {
+export function businessSchema() {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      item: `${SITE_URL}${item.path}`,
-    })),
-  };
-}
-
-export function organizationSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'City Delivery Services',
-    url: SITE_URL,
-    logo: DEFAULT_IMAGE,
-    email: 'citydeliveryservicesofficial@gmail.com',
-    telephone: '+918189800888',
-  };
-}
-
-export function localBusinessSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    '@id': `${SITE_URL}/#localbusiness`,
-    name: 'City Delivery Services',
+    '@type': ['Organization', 'LocalBusiness'],
+    '@id': ORGANIZATION_ID,
+    name: SITE_NAME,
     url: SITE_URL,
     image: DEFAULT_IMAGE,
-    logo: DEFAULT_IMAGE,
-    email: 'citydeliveryservicesofficial@gmail.com',
-    telephone: '+918189800888',
+    logo: { '@type': 'ImageObject', '@id': `${SITE_URL}/#logo`, url: DEFAULT_IMAGE },
+    email: SITE_EMAIL,
+    telephone: SITE_PHONE,
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'No. 7, Thendral Nagar, Sathuvachari',
@@ -116,36 +104,76 @@ export function localBusinessSchema() {
     areaServed: {
       '@type': 'City',
       name: 'Vellore',
+      containedInPlace: {
+        '@type': 'AdministrativeArea',
+        name: 'Tamil Nadu',
+        containedInPlace: { '@type': 'Country', name: 'India' },
+      },
     },
   };
 }
 
+export const organizationSchema = businessSchema;
+export const localBusinessSchema = businessSchema;
+
 export function websiteSchema() {
   return {
-    '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'City Delivery Services',
+    '@id': WEBSITE_ID,
     url: SITE_URL,
-    description: 'Local product request and delivery support for customers in Vellore.',
+    name: SITE_NAME,
+    description: 'Local product request and delivery support for customers in Vellore, Tamil Nadu.',
+    publisher: { '@id': ORGANIZATION_ID },
+    inLanguage: 'en-IN',
+  };
+}
+
+export function webPageSchema({ path, name, description, breadcrumb = false }) {
+  const url = absoluteUrl(path);
+  return {
+    '@type': 'WebPage',
+    '@id': `${url}#webpage`,
+    url,
+    name,
+    description,
+    isPartOf: { '@id': WEBSITE_ID },
+    about: { '@id': ORGANIZATION_ID },
+    inLanguage: 'en-IN',
+    ...(breadcrumb ? { breadcrumb: { '@id': `${url}#breadcrumb` } } : {}),
+  };
+}
+
+export function breadcrumbSchema(items, path) {
+  const url = absoluteUrl(path);
+  return {
+    '@type': 'BreadcrumbList',
+    '@id': `${url}#breadcrumb`,
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
   };
 }
 
 export function serviceSchema() {
   return {
-    '@context': 'https://schema.org',
     '@type': 'Service',
+    '@id': `${SITE_URL}/#service`,
     name: 'Local product request and delivery support',
     serviceType: 'Product request and delivery support',
-    provider: { '@type': 'LocalBusiness', name: 'City Delivery Services', url: SITE_URL },
+    provider: { '@id': ORGANIZATION_ID },
     areaServed: { '@type': 'City', name: 'Vellore' },
-    serviceUrl: `${SITE_URL}/request`,
+    url: `${SITE_URL}/request`,
   };
 }
 
 export function faqSchema(items) {
   return {
-    '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    '@id': `${SITE_URL}/#faq`,
+    isPartOf: { '@id': `${SITE_URL}/#webpage` },
     mainEntity: items.map(({ q, a }) => ({
       '@type': 'Question',
       name: q,

@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { User, Package, Truck, Loader2, Send, CheckCircle2, Copy, Check, AlertTriangle, ShieldCheck } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
-import SEO, { breadcrumbSchema } from '../components/SEO.jsx';
+import SEO, { breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 import Field from '../components/form/Field.jsx';
 import CustomSelect from '../components/form/CustomSelect.jsx';
 import ImageUpload from '../components/form/ImageUpload.jsx';
@@ -205,9 +205,19 @@ export default function RequestProduct() {
     <>
       <SEO
         title="Request Delivery in Vellore | City Delivery Services"
-        description="Request product delivery in Vellore by sharing your product, store and delivery details with City Delivery Services."
+        description="Request local delivery in Vellore by sharing your product, store and delivery details with City Delivery Services."
         path="/request"
-        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Request a Product', path: '/request' }])]}
+        structuredData={[
+          businessSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: '/request',
+            name: 'Request a Delivery Service',
+            description: 'Request local delivery in Vellore by sharing your product, store and delivery details with City Delivery Services.',
+            breadcrumb: true,
+          }),
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Request a Product', path: '/request' }], '/request'),
+        ]}
       />
       <PageHero
         eyebrow="Request a product"

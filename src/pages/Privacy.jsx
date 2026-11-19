@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageHero from '../components/PageHero.jsx';
-import SEO, { breadcrumbSchema } from '../components/SEO.jsx';
+import SEO, { breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 import { SITE } from '../utils/config.js';
 
 const UPDATED = 'November 2026';
@@ -58,10 +58,20 @@ export default function Privacy() {
   return (
     <>
       <SEO
-        title="Privacy Policy | City Delivery Services"
-        description="Read the City Delivery Services privacy policy for product requests, contact messages, images and service communications in Vellore."
+        title="Privacy Policy | City Delivery Services Vellore"
+        description="Read how City Delivery Services handles product requests, contact messages, images and service communications in Vellore."
         path="/privacy"
-        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy', path: '/privacy' }])]}
+        structuredData={[
+          businessSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: '/privacy',
+            name: 'Privacy Policy',
+            description: 'Read how City Delivery Services handles product requests, contact messages, images and service communications in Vellore.',
+            breadcrumb: true,
+          }),
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy', path: '/privacy' }], '/privacy'),
+        ]}
       />
       <PageHero eyebrow="Legal" title="Privacy Policy" description={`Last updated: ${UPDATED}`} />
       <section className="pb-24">

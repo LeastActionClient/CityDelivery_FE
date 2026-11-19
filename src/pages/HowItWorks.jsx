@@ -2,7 +2,7 @@ import { motion, useScroll, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { ClipboardList, Store, Send, BellRing, PhoneCall, ArrowRight } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
-import SEO, { breadcrumbSchema } from '../components/SEO.jsx';
+import SEO, { breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 import Button from '../components/Button.jsx';
 import { Reveal } from '../components/Reveal.jsx';
 
@@ -22,10 +22,20 @@ export default function HowItWorks() {
   return (
     <>
       <SEO
-        title="How City Delivery Services Works | Vellore Requests"
-        description="See how to submit a product and store delivery request in Vellore, from entering details to receiving confirmation from our team."
+        title="How It Works | City Delivery Services Vellore"
+        description="See how to submit a product and store request in Vellore, from entering details to confirmation from our team."
         path="/how-it-works"
-        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'How It Works', path: '/how-it-works' }])]}
+        structuredData={[
+          businessSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: '/how-it-works',
+            name: 'How City Delivery Services Works',
+            description: 'See how to submit a product and store request in Vellore, from entering details to confirmation from our team.',
+            breadcrumb: true,
+          }),
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'How It Works', path: '/how-it-works' }], '/how-it-works'),
+        ]}
       />
       <PageHero eyebrow="How it works" title="From idea to inbox in five steps." description="A clear, honest process. Submitting a request starts the conversation — our team confirms everything with you directly." />
 

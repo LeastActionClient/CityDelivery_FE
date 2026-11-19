@@ -5,7 +5,7 @@ import { Reveal, Stagger, StaggerItem } from '../components/Reveal.jsx';
 import TiltCard from '../components/TiltCard.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 import heroVisual from '../assets/image.png';
-import SEO, { breadcrumbSchema } from '../components/SEO.jsx';
+import SEO, { breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 
 const BLOCKS = [
   { icon: Target, title: 'Our mission', text: 'To make asking for the products you love as simple as filling in a short form — with clear communication at every step.' },
@@ -18,10 +18,20 @@ export default function About() {
   return (
     <>
       <SEO
-        title="About City Delivery Services | Vellore Delivery Team"
-        description="Learn how City Delivery Services helps customers in Vellore submit clear product and local delivery requests with human follow-up."
+        title="About City Delivery Services | Local Delivery in Vellore"
+        description="Learn how City Delivery Services supports customers in Vellore with clear product requests, store details and personal follow-up."
         path="/about"
-        structuredData={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About Us', path: '/about' }])]}
+        structuredData={[
+          businessSchema(),
+          websiteSchema(),
+          webPageSchema({
+            path: '/about',
+            name: 'About City Delivery Services',
+            description: 'Learn how City Delivery Services supports customers in Vellore with clear product requests, store details and personal follow-up.',
+            breadcrumb: true,
+          }),
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About Us', path: '/about' }], '/about'),
+        ]}
       />
       <PageHero eyebrow="About us" title="Convenience, made personal." description="City Delivery Services is a request-based service: you tell us what you need and where it is from, and our team works with you on the next steps." />
 
@@ -47,6 +57,7 @@ export default function About() {
                   src={heroVisual}
                   alt="City Delivery Services courier delivering products around the city"
                   className="h-full w-full object-cover"
+                  decoding="async"
                 />
               </div>
             </div>
