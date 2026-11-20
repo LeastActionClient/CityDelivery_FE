@@ -15,7 +15,7 @@ export default function Logo({ light = false }) {
   return (
     <Link to="/" className="group flex items-center gap-3" aria-label="City Delivery Services — home">
       <span className="transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
-        <img src={logoAsset} alt="" className="h-15 w-20 rounded-full object-contain sm:h-15 sm:w-24" />
+        <img src={logoAsset} alt="" className="h-20 w-[120px] rounded-full object-contain sm:h-20 sm:w-[120px]" />
       </span>
       {/* <span className={`font-display text-[17px] font-extrabold leading-[1.05] tracking-tight ${light ? 'text-white' : 'text-brand-dark'}`}>
         City Delivery
