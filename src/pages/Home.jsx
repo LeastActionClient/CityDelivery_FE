@@ -10,74 +10,12 @@ import TiltCard from '../components/TiltCard.jsx';
 import Counter from '../components/Counter.jsx';
 import FAQ from '../components/FAQ.jsx';
 import SEO, { businessSchema, faqSchema, serviceSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
-// Put the image at src/assets/hero-visual.png
 import heroVisual from '../assets/image.png';
 import responsiveHeroBackground from '../assets/resposiveImage.png';
+import { GALLERY_ITEMS } from '../utils/gallery.js';
 
 const GREEN = '#0F8A2F';
 const DARK = '#16161A';
-
-/*
-  GALLERY IMAGES
-  Drop any number of images (svg / png / jpg / jpeg / webp) into:  src/assets/GalleryImages/
-  They are picked up automatically (sorted by file name) and shown in the gallery section.
-  If the folder is empty, the two hero images are used so the section is never blank.
-  (Uses Vite's import.meta.glob.)
-*/
-const galleryModules = import.meta.glob('../assets/GalleryImages/*.{png,jpg,jpeg,webp,svg,PNG,JPG,JPEG,WEBP,SVG}', { eager: true, import: 'default' });
-const galleryFiles = Object.keys(galleryModules).sort().map((k) => galleryModules[k]);
-
-const GALLERY_CAPTIONS = [
-  { title: 'Doorstep delivery', text: 'Right to your door, hassle free' },
-  { title: 'Groceries & daily needs', text: 'Fresh picks from your favourite store' },
-  { title: 'Medicines & health', text: 'When you need it most' },
-  { title: 'Gifts & surprises', text: 'Delivered with a smile' },
-  { title: 'Shoes & fashion', text: 'Any store, any product' },
-  { title: 'Electronics & gadgets', text: 'Handled with care' },
-  { title: 'Friendly couriers', text: 'Real people, real support' },
-  { title: 'On time, every time', text: "We'll keep you posted" },
-];
-
-// Layout pattern (repeats every 8 tiles). 2 columns on phones, 4 columns from md up.
-const GALLERY_SPANS = [
-  'col-span-2 row-span-2', // big feature tile
-  '',
-  '',
-  '',
-  '',
-  'col-span-2', // wide tile
-  '',
-  '',
-];
-
-/*
-  Only 2 artwork images exist today, so extra tiles are made by zooming into different
-  parts of them. `zoom` = magnification, `origin` = the point that is zoomed into
-  (x% y%). Tweak these numbers if a crop frames the wrong object.
-  Real photos you add to src/assets/gallery/ are shown first and replace these crops.
-*/
-const GALLERY_CROPS = [
-  { src: heroVisual, zoom: 1, origin: '50% 50%' },
-  { src: heroVisual, zoom: 2.3, origin: '28% 72%' },
-  { src: heroVisual, zoom: 2.3, origin: '72% 28%' },
-  { src: heroVisual, zoom: 2.3, origin: '50% 88%' },
-  { src: heroVisual, zoom: 2.3, origin: '88% 72%' },
-  { src: responsiveHeroBackground, zoom: 1, origin: '50% 50%' },
-  { src: responsiveHeroBackground, zoom: 2, origin: '20% 40%' },
-  { src: responsiveHeroBackground, zoom: 2, origin: '80% 65%' },
-];
-
-const GALLERY_MIN = 8;
-const GALLERY_SOURCES = [
-  ...galleryFiles.map((src) => ({ src, zoom: 1, origin: '50% 50%' })),
-  ...GALLERY_CROPS.slice(0, Math.max(0, GALLERY_MIN - galleryFiles.length)),
-];
-
-const GALLERY_ITEMS = GALLERY_SOURCES.map((g, i) => ({
-  ...g,
-  ...GALLERY_CAPTIONS[i % GALLERY_CAPTIONS.length],
-  span: GALLERY_SPANS[i % GALLERY_SPANS.length],
-}));
 
 const STEPS = [
   { icon: ClipboardList, title: 'Tell us the product', text: 'Name it, describe it, add a photo if you have one.' },
@@ -612,6 +550,11 @@ function Gallery() {
                 <strong className="block text-sm font-extrabold text-white sm:text-base">{g.title}</strong>
                 <span className="mt-0.5 block text-xs text-white/80 sm:text-sm">{g.text}</span>
               </figcaption>
+              <Link
+                to={`/gallery/${g.slug}`}
+                aria-label={`View details: ${g.title}`}
+                className="absolute inset-0 z-10 rounded-[inherit] focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white"
+              />
             </motion.figure>
           ))}
         </div>
