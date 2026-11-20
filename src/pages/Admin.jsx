@@ -21,6 +21,7 @@ import {
 import { ApiError, getAdminRequests, updateAdminRequestStatus } from '../services/api.js';
 import responsiveHeroBackground from '../assets/resposiveImage.png';
 import SEO from '../components/SEO.jsx';
+import RiderManagement from '../components/admin/RiderManagement.jsx';
 
 const STORAGE_KEY = 'city-delivery-admin-api-key';
 const STATUSES = ['Pending', 'Reviewing', 'Contacted', 'Completed', 'Cancelled'];
@@ -215,6 +216,7 @@ export default function Admin() {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [tab, setTab] = useState('requests');
 
   const loadRequests = useCallback(async (key = apiKey, nextPage = page, nextStatus = status) => {
     if (!key) return false;
@@ -278,8 +280,8 @@ export default function Admin() {
         <header className="flex flex-col gap-5 rounded-4xl bg-brand-dark p-6 text-white shadow-lift sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
             <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow">City Delivery Services</p>
-            <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Customer requests</h1>
-            <p className="mt-2 text-white/65">{total} submitted request{total === 1 ? '' : 's'}</p>
+            <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{tab === 'riders' ? 'Admin dashboard' : 'Customer requests'}</h1>
+            <p className="mt-2 text-white/65">{tab === 'riders' ? 'Review rider applications and onboarding' : `${total} submitted request${total === 1 ? '' : 's'}`}</p>
           </div>
           <div className="flex gap-2">
             <button type="button" onClick={() => loadRequests()} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-bold transition hover:bg-white/20" disabled={loading}>
@@ -291,6 +293,22 @@ export default function Admin() {
           </div>
         </header>
 
+        <div className="mt-6 flex gap-2 rounded-2xl bg-white p-2 shadow-soft ring-1 ring-black/5">
+          <button type="button" onClick={() => setTab('requests')} className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition ${tab === 'requests' ? 'bg-brand-dark text-brand-yellow' : 'text-brand-muted hover:bg-brand-light'}`}>
+            Customer requests
+          </button>
+          <button type="button" onClick={() => setTab('riders')} className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition ${tab === 'riders' ? 'bg-brand-dark text-brand-yellow' : 'text-brand-muted hover:bg-brand-light'}`}>
+            Rider applications
+          </button>
+        </div>
+
+        {tab === 'riders' ? (
+          <RiderManagement
+            apiKey={apiKey}
+            onUnauthorized={() => { clearKey(); setApiKey(''); setLoginError('That admin key was not accepted.'); }}
+          />
+        ) : (
+        <>
         <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-sm font-bold text-brand-dark"><ClipboardList size={18} className="text-brand-green" /> All submitted details</div>
           <label className="flex items-center gap-3 text-sm font-bold text-brand-dark">
@@ -319,6 +337,8 @@ export default function Admin() {
             <span className="text-sm font-bold text-brand-muted">Page {page} of {pages}</span>
             <button type="button" disabled={page >= pages || loading} onClick={() => loadRequests(apiKey, page + 1, status)} className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-bold text-brand-dark transition hover:bg-brand-light disabled:opacity-40">Next <ChevronRight size={17} /></button>
           </div>
+        )}
+        </>
         )}
       </div>
       </main>

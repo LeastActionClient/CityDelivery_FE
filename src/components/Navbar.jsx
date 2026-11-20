@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight, Bike } from 'lucide-react';
 import Logo from './Logo.jsx';
 import Button from './Button.jsx';
 import { NAV_LINKS } from '../utils/config.js';
@@ -33,6 +33,11 @@ export default function Navbar() {
       isActive ? 'text-brand-dark' : 'text-brand-muted hover:text-brand-dark'
     }`;
 
+  const riderCtaCls = ({ isActive }) =>
+    `hidden min-h-[40px] items-center gap-2 rounded-full bg-brand-yellow px-5 text-sm font-extrabold text-brand-dark shadow-soft ring-1 ring-brand-yellow-deep/40 transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-yellow-deep hover:text-white sm:inline-flex ${
+      isActive ? 'ring-2 ring-brand-dark' : ''
+    }`;
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6">
       <div
@@ -62,6 +67,9 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <NavLink to="/become-a-rider" className={riderCtaCls}>
+            <Bike size={16} /> Become a Rider
+          </NavLink>
           <Button to="/request" size="sm" magnetic className="hidden sm:inline-flex">
             Request a Product <ArrowRight size={16} />
           </Button>
@@ -106,7 +114,17 @@ export default function Navbar() {
                 </motion.li>
               ))}
             </ul>
-            <Button to="/request" className="mt-3 w-full" size="lg">
+            <NavLink
+              to="/become-a-rider"
+              className={({ isActive }) =>
+                `mt-3 flex min-h-[56px] items-center justify-center gap-2 rounded-2xl px-5 text-base font-extrabold text-brand-dark shadow-soft transition ${
+                  isActive ? 'bg-brand-yellow-deep text-white' : 'bg-brand-yellow hover:bg-brand-yellow-deep hover:text-white'
+                }`
+              }
+            >
+              <Bike size={18} /> Become a Rider <ArrowRight size={17} />
+            </NavLink>
+            <Button to="/request" className="mt-2 w-full" size="lg">
               Request a Product <ArrowRight size={18} />
             </Button>
           </motion.nav>

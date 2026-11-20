@@ -11,6 +11,9 @@ const Contact = lazy(() => import('./pages/Contact.jsx'));
 const Privacy = lazy(() => import('./pages/Privacy.jsx'));
 const Terms = lazy(() => import('./pages/Terms.jsx'));
 const GalleryDetail = lazy(() => import('./pages/GalleryDetail.jsx'));
+const BecomeRider = lazy(() => import('./pages/BecomeRider.jsx'));
+const RiderRegister = lazy(() => import('./pages/RiderRegister.jsx'));
+const RiderStatus = lazy(() => import('./pages/RiderStatus.jsx'));
 const Admin = lazy(() => import('./pages/Admin.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 
@@ -28,6 +31,9 @@ export default function App() {
           <Route path="privacy" element={<Privacy />} />
           <Route path="terms" element={<Terms />} />
           <Route path="gallery/:slug" element={<GalleryDetail />} />
+          <Route path="become-a-rider" element={<BecomeRider />} />
+          <Route path="rider/register" element={<RiderRegister />} />
+          <Route path="rider/status" element={<RiderStatus />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
