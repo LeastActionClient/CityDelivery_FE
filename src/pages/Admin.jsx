@@ -182,6 +182,11 @@ function RequestCard({ item, apiKey, onStatusChange }) {
           <Detail icon={MapPin} label="Delivery address">{valueOrDash(item.deliveryAddress)}</Detail>
           <Detail icon={MapPin} label="City / postal code">{valueOrDash(item.city)}{item.postalCode ? ` · ${item.postalCode}` : ''}</Detail>
           <Detail icon={ClipboardList} label="Estimated budget">{item.estimatedBudget != null ? `₹${Number(item.estimatedBudget).toLocaleString('en-IN')}` : 'Not provided'}</Detail>
+          <Detail icon={ShieldCheck} label="Permitted items declaration">
+            {item.prohibitedItemsDeclaration?.accepted
+              ? `Accepted · ${item.prohibitedItemsDeclaration.policyVersion || 'Version not recorded'} · ${formatDate(item.prohibitedItemsDeclaration.acceptedAt)}`
+              : 'Not recorded'}
+          </Detail>
           <Detail icon={CalendarDays} label="Submitted">{formatDate(item.createdAt)}</Detail>
           <div className="rounded-2xl bg-brand-light/70 p-4 md:col-span-2">
             <div className="text-xs font-extrabold uppercase tracking-[0.12em] text-brand-muted">Additional instructions</div>

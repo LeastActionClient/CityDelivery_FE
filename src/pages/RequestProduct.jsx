@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { User, Package, Truck, Loader2, Send, CheckCircle2, Copy, Check, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { User, Package, Truck, MapPin, Store, ArrowDown, Loader2, Send, CheckCircle2, Copy, Check, AlertTriangle, ShieldCheck } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
 import SEO, { breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 import Field from '../components/form/Field.jsx';
@@ -17,6 +17,7 @@ const INITIAL = {
   productName: '', productCategory: '', storeName: '', storeLocation: '',
   productDescription: '', quantity: '1', estimatedBudget: '',
   deliveryAddress: '', city: '', postalCode: '', additionalInstructions: '',
+  prohibitedItemsAccepted: false,
   website: '', // honeypot — must stay empty
 };
 
@@ -49,6 +50,7 @@ function validate(v) {
   const q = Number(v.quantity);
   if (!Number.isInteger(q) || q < 1 || q > 100) e.quantity = 'Quantity must be between 1 and 100.';
   if (v.estimatedBudget !== '' && (Number.isNaN(Number(v.estimatedBudget)) || Number(v.estimatedBudget) < 0)) e.estimatedBudget = 'Budget must be a positive number.';
+  if (!v.prohibitedItemsAccepted) e.prohibitedItemsAccepted = 'Please confirm that your parcel contains only permitted items.';
   return e;
 }
 
@@ -174,6 +176,7 @@ export default function RequestProduct() {
       if (typeof v === 'string') fd.append(k, v.trim());
     });
     fd.append('submissionKey', submissionKey.current);
+    fd.append('prohibitedItemsAccepted', values.prohibitedItemsAccepted ? 'true' : 'false');
     if (image) fd.append('productImage', image);
 
     setSubmitting(true);
@@ -252,18 +255,12 @@ export default function RequestProduct() {
                   </Field>
                 </SectionCard>
 
-                <SectionCard icon={Package} step={2} title="The product" subtitle="What you want, and where to find it." delay={0.05}>
+                <SectionCard icon={Package} step={2} title="The product" subtitle="What you want and any helpful details." delay={0.05}>
                   <Field id="productName" label="Product name" required error={errors.productName}>
                     <input {...common('productName')} type="text" placeholder="e.g. Cold-pressed olive oil 1L" maxLength={120} />
                   </Field>
                   <Field id="productCategory" label="Product category" required error={errors.productCategory}>
                     <CustomSelect id="productCategory" value={values.productCategory} onChange={set('productCategory')} options={CATEGORIES} placeholder="Choose a category" invalid={!!errors.productCategory} />
-                  </Field>
-                  <Field id="storeName" label="Store name" optional error={errors.storeName}>
-                    <input {...common('storeName')} type="text" placeholder="e.g. Fresh Mart" maxLength={120} />
-                  </Field>
-                  <Field id="storeLocation" label="Store location" optional error={errors.storeLocation} hint="Area, street or landmark.">
-                    <input {...common('storeLocation')} type="text" placeholder="e.g. Anna Nagar, near the main roundabout" maxLength={200} />
                   </Field>
                   <div className="sm:col-span-2">
                     <Field id="productDescription" label="Product description" optional error={errors.productDescription} hint="Brand, size, colour, flavour — anything that helps us find the right one.">
@@ -283,26 +280,109 @@ export default function RequestProduct() {
                   </div>
                 </SectionCard>
 
-                <SectionCard icon={Truck} step={3} title="Delivery details" subtitle="Where should it go?" delay={0.05}>
-                  <div className="sm:col-span-2">
-                    <Field id="deliveryAddress" label="Delivery address" required error={errors.deliveryAddress}>
-                      <textarea {...common('deliveryAddress')} rows={3} maxLength={300} autoComplete="street-address" placeholder="House / flat no., street, area" />
-                    </Field>
+                <SectionCard icon={Truck} step={3} title="Pickup & Delivery" subtitle="Pickup point and delivery destination in one place." delay={0.05}>
+                  <div className="flex items-center gap-3 rounded-2xl bg-brand-dark px-4 py-3 text-white shadow-soft sm:col-span-2 sm:px-5">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-yellow text-brand-dark"><Store size={16} /></span>
+                    <span className="text-sm font-extrabold">From</span>
+                    <span className="mx-1 flex-1 border-t-2 border-dashed border-white/25" />
+                    <Truck size={18} className="shrink-0 text-brand-yellow" />
+                    <span className="mx-1 flex-1 border-t-2 border-dashed border-white/25" />
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-green text-white"><MapPin size={16} /></span>
+                    <span className="text-sm font-extrabold">To</span>
                   </div>
-                  <Field id="city" label="City" required error={errors.city}>
-                    <input {...common('city')} type="text" autoComplete="address-level2" placeholder="e.g. Madurai" maxLength={80} />
-                  </Field>
-                  <Field id="postalCode" label="Postal code" required error={errors.postalCode}>
-                    <input {...common('postalCode')} type="text" autoComplete="postal-code" inputMode="text" placeholder="e.g. 625001" maxLength={12} />
-                  </Field>
-                  <div className="sm:col-span-2">
-                    <Field id="additionalInstructions" label="Additional instructions" optional error={errors.additionalInstructions}>
-                      <textarea {...common('additionalInstructions')} rows={3} maxLength={600} placeholder="Landmarks, preferred contact time, substitutions you accept…" />
-                    </Field>
+
+                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-yellow/20 via-white to-white p-5 shadow-soft ring-1 ring-brand-yellow/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:col-span-2 sm:p-6">
+                    <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand-yellow/20 blur-2xl" />
+                    <div className="relative flex flex-wrap items-center gap-3">
+                      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-yellow text-brand-dark shadow-soft"><Store size={22} /></span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand-dark">From</p>
+                          <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-brand-muted ring-1 ring-black/5">Pickup</span>
+                        </div>
+                        <p className="mt-1 text-sm text-brand-muted">Where should we collect it? Optional if you are still deciding.</p>
+                      </div>
+                      <span className="hidden rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-brand-muted ring-1 ring-black/5 sm:block">Optional</span>
+                    </div>
+                    <div className="relative mt-6 grid gap-5 sm:grid-cols-2">
+                      <Field id="storeName" label="Store name" optional error={errors.storeName}>
+                        <input {...common('storeName')} type="text" placeholder="e.g. Fresh Mart" maxLength={120} />
+                      </Field>
+                      <Field id="storeLocation" label="Store location" optional error={errors.storeLocation} hint="Area, street or landmark.">
+                        <input {...common('storeLocation')} type="text" placeholder="e.g. Anna Nagar, near the main roundabout" maxLength={200} />
+                      </Field>
+                    </div>
+                  </div>
+
+                  <div aria-hidden="true" className="relative z-10 -my-1 flex justify-center sm:col-span-2">
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-white text-brand-green shadow-soft ring-1 ring-brand-yellow/40"><ArrowDown size={18} /></span>
+                  </div>
+
+                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-green/10 via-white to-white p-5 shadow-soft ring-1 ring-brand-green/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:col-span-2 sm:p-6">
+                    <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand-green/10 blur-2xl" />
+                    <div className="relative flex flex-wrap items-center gap-3">
+                      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-green text-white shadow-glow"><MapPin size={22} /></span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand-dark">To</p>
+                          <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-brand-muted ring-1 ring-black/5">Delivery</span>
+                        </div>
+                        <p className="mt-1 text-sm text-brand-muted">Where should we deliver it?</p>
+                      </div>
+                      <span className="hidden rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-brand-green ring-1 ring-black/5 sm:block">Required</span>
+                    </div>
+                    <div className="relative mt-6 grid gap-5 sm:grid-cols-2">
+                      <div className="sm:col-span-2">
+                        <Field id="deliveryAddress" label="Delivery address" required error={errors.deliveryAddress}>
+                          <textarea {...common('deliveryAddress')} rows={3} maxLength={300} autoComplete="street-address" placeholder="House / flat no., street, area" />
+                        </Field>
+                      </div>
+                      <Field id="city" label="City" required error={errors.city}>
+                        <input {...common('city')} type="text" autoComplete="address-level2" placeholder="e.g. Madurai" maxLength={80} />
+                      </Field>
+                      <Field id="postalCode" label="Postal code" required error={errors.postalCode}>
+                        <input {...common('postalCode')} type="text" autoComplete="postal-code" inputMode="text" placeholder="e.g. 625001" maxLength={12} />
+                      </Field>
+                      <div className="sm:col-span-2">
+                        <Field id="additionalInstructions" label="Additional instructions" optional error={errors.additionalInstructions}>
+                          <textarea {...common('additionalInstructions')} rows={3} maxLength={600} placeholder="Landmarks, preferred contact time, substitutions you accept…" />
+                        </Field>
+                      </div>
+                    </div>
                   </div>
                 </SectionCard>
 
                 <Reveal>
+                  <div className="rounded-3xl bg-white p-5 shadow-soft ring-1 ring-black/5 sm:p-6">
+                    <label htmlFor="prohibitedItemsAccepted" className="flex items-start gap-3">
+                      <input
+                        id="prohibitedItemsAccepted"
+                        type="checkbox"
+                        checked={values.prohibitedItemsAccepted}
+                        onChange={(event) => {
+                          setValues((v) => ({ ...v, prohibitedItemsAccepted: event.target.checked }));
+                          if (errors.prohibitedItemsAccepted) setErrors((er) => ({ ...er, prohibitedItemsAccepted: undefined }));
+                        }}
+                        aria-invalid={errors.prohibitedItemsAccepted ? true : undefined}
+                        aria-describedby={errors.prohibitedItemsAccepted ? 'prohibitedItemsAccepted-error' : undefined}
+                        className="mt-0.5 h-5 w-5 shrink-0 accent-brand-green"
+                      />
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold leading-relaxed text-brand-dark">
+                          I agree that my parcel contains only permitted items. <span className="text-red-500" aria-hidden="true">*</span>
+                        </span>
+                        <Link to="/prohibited-items-policy" className="mt-1 inline-block text-sm font-bold text-brand-green underline-offset-2 transition hover:text-brand-green-hover hover:underline">
+                          Read Prohibited Items Policy
+                        </Link>
+                      </span>
+                    </label>
+                    {errors.prohibitedItemsAccepted && (
+                      <p id="prohibitedItemsAccepted-error" role="alert" className="mt-2 text-sm font-semibold text-red-600">
+                        {errors.prohibitedItemsAccepted}
+                      </p>
+                    )}
+                  </div>
+
                   <AnimatePresence>
                     {formError && (
                       <motion.div role="alert" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
@@ -312,7 +392,7 @@ export default function RequestProduct() {
                     )}
                   </AnimatePresence>
 
-                  <div className="flex flex-col items-center gap-4 rounded-4xl bg-brand-dark p-7 text-center sm:flex-row sm:justify-between sm:text-left">
+                  <div className="flex flex-col items-center gap-4 rounded-4xl bg-brand-dark p-7 text-center sm:flex-row sm:justify-between sm:text-left mt-10">
                     <p className="flex max-w-md items-start gap-3 text-sm leading-relaxed text-white/70">
                       <ShieldCheck size={20} className="mt-0.5 shrink-0 text-brand-yellow" />
                       <span>By submitting you agree to be contacted about this request. See our <Link to="/privacy" className="font-bold text-brand-yellow underline-offset-2 hover:underline">Privacy Policy</Link>.</span>

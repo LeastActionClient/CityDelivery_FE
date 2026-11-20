@@ -30,7 +30,7 @@ export default function Navbar() {
 
   const linkCls = ({ isActive }) =>
     `relative rounded-full px-4 py-2 text-[15px] font-semibold transition-colors ${
-      isActive ? 'text-brand-dark' : 'text-brand-muted hover:text-brand-dark'
+      isActive ? 'text-brand-dark !font-extrabold' : 'text-black hover:text-brand-dark'
     }`;
 
   const riderCtaCls = ({ isActive }) =>

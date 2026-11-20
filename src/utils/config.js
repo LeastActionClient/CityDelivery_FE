@@ -28,6 +28,7 @@ export const CATEGORIES = [
 
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+export const PROHIBITED_ITEMS_POLICY_VERSION = '2026-11-20';
 
 export const NAV_LINKS = [
   { to: '/', label: 'Home' },
