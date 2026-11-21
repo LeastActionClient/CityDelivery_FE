@@ -76,7 +76,7 @@ export default function Footer() {
             className="ft-btn mt-6 inline-flex items-center gap-3 rounded-2xl bg-gradient-to-b from-[#FFE066] to-[#FFC928] px-7 py-3.5 font-bold text-[#16161A]"
             style={{ boxShadow: '0 6px 0 #B98600,0 16px 26px rgba(255,201,40,.3),inset 0 2px 0 rgba(255,255,255,.6)' }}
           >
-            Request a Product <ArrowRight size={18} strokeWidth={2.6} />
+            Request a Service <ArrowRight size={18} strokeWidth={2.6} />
           </Link>
         </motion.div>
 
@@ -92,7 +92,7 @@ export default function Footer() {
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">Explore</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
           <ul className="mt-5 space-y-3 text-white/75">
-            {[...NAV_LINKS.slice(1), { to: '/become-a-rider', label: 'Become a Rider' }, { to: '/request', label: 'Request a Product' }, { to: '/prohibited-items-policy', label: 'Prohibited Items Policy' }, { to: '/privacy', label: 'Privacy Policy' }, { to: '/terms', label: 'Terms and Conditions' }].map((l) => (
+            {[...NAV_LINKS.slice(1), { to: '/become-a-rider', label: 'Become a Rider' }, { to: '/request', label: 'Request a Service' }, { to: '/prohibited-items-policy', label: 'Prohibited Items Policy' }, { to: '/privacy', label: 'Privacy Policy' }, { to: '/terms', label: 'Terms and Conditions' }].map((l) => (
               <li key={l.to}>
                 <Link to={l.to} className="ft-link">{l.label}</Link>
               </li>

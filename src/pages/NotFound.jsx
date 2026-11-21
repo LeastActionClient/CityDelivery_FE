@@ -18,7 +18,7 @@ export default function NotFound() {
         <p className="mx-auto mt-4 max-w-md text-lg text-brand-muted">This page seems to have gone missing in transit.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Button to="/">Back to home</Button>
-          <Button to="/request" variant="outline">Request a Product</Button>
+          <Button to="/request" variant="outline">Request a Service</Button>
         </div>
       </div>
       </section>

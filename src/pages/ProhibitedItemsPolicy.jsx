@@ -93,7 +93,7 @@ export default function ProhibitedItemsPolicy() {
             description: 'Prohibited and restricted items policy for City Delivery Services product delivery requests.',
             breadcrumb: true,
           }),
-          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Request a Product', path: '/request' }, { name: 'Prohibited Items Policy', path: '/prohibited-items-policy' }], '/prohibited-items-policy'),
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Request a Service', path: '/request' }, { name: 'Prohibited Items Policy', path: '/prohibited-items-policy' }], '/prohibited-items-policy'),
         ]}
       />
 

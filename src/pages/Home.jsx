@@ -39,7 +39,7 @@ const STATS = [
 ];
 
 const FAQS = [
-  { q: 'How do I request a product?', a: 'Open the Request a Product page, fill in your details, the product and store information and your delivery address, then submit. You will see a confirmation with your Request ID right away.' },
+  { q: 'How do I request a service?', a: 'Open the Request a Service page, fill in your details, the product and store information and your delivery address, then submit. You will see a confirmation with your Request ID right away.' },
   { q: 'What happens after I submit?', a: 'Your request is saved and our team is notified by email. You also get a confirmation email. A team member will then contact you with the next steps.' },
   { q: 'Is delivery automatic?', a: 'No. Submitting a request does not place an automatic order. Our team reviews each request and confirms availability, price and timing with you directly.' },
   { q: 'Can I upload a photo of the product?', a: 'Yes — an optional JPG, PNG or WebP image up to 5 MB can be attached to help us identify the exact item.' },
@@ -264,7 +264,7 @@ function Hero() {
             className="hv-btn inline-flex w-full items-center justify-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white sm:w-auto lg:h-[4.1vw] lg:gap-[0.9vw] lg:rounded-[1.1vw] lg:px-[2.3vw] lg:py-0 lg:text-[1.35vw]"
             style={{ background: 'linear-gradient(180deg,#19A23E,#0F8A2F)', boxShadow: '0 6px 0 #0A6B22,0 16px 26px rgba(15,138,47,.4),inset 0 2px 0 rgba(255,255,255,.3)' }}
           >
-            Request a Product <ArrowRight className="h-5 w-5 lg:h-[1.5vw] lg:w-[1.5vw]" />
+            Request a Service <ArrowRight className="h-5 w-5 lg:h-[1.5vw] lg:w-[1.5vw]" />
           </Link>
           <Link
             to="/how-it-works"
@@ -565,7 +565,7 @@ function Gallery() {
             className="inline-flex items-center justify-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white transition-transform hover:-translate-y-1 active:translate-y-1"
             style={{ background: 'linear-gradient(180deg,#19A23E,#0F8A2F)', boxShadow: '0 6px 0 #0A6B22,0 16px 26px rgba(15,138,47,.4),inset 0 2px 0 rgba(255,255,255,.3)' }}
           >
-            Request a Product <ArrowRight className="h-5 w-5" />
+            Request a Service <ArrowRight className="h-5 w-5" />
           </Link>
         </motion.div>
       </div>
@@ -842,7 +842,7 @@ function CTA() {
               ))}
             </ul>
             <div className="mt-9 flex flex-wrap items-center gap-6">
-              <Button to="/request" size="lg" magnetic>Request a Product <ArrowRight size={20} /></Button>
+              <Button to="/request" size="lg" magnetic>Request a Service <ArrowRight size={20} /></Button>
               <Link to="/how-it-works" className="inline-flex items-center gap-2 text-sm font-bold text-white/80 underline-offset-4 transition hover:text-[#FFC928] hover:underline">
                 See how it works <ArrowRight size={16} />
               </Link>

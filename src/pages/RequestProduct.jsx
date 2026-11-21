@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { User, Package, Truck, MapPin, Store, ArrowDown, Loader2, Send, CheckCircle2, Copy, Check, AlertTriangle, ShieldCheck } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
 import SEO, { breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
@@ -126,7 +126,9 @@ function Success({ result, onReset }) {
 }
 
 export default function RequestProduct() {
-  const [values, setValues] = useState(INITIAL);
+  const [searchParams] = useSearchParams();
+  const requestedCategory = CATEGORIES.includes(searchParams.get('category')) ? searchParams.get('category') : '';
+  const [values, setValues] = useState(() => ({ ...INITIAL, productCategory: requestedCategory }));
   const [errors, setErrors] = useState({});
   const [image, setImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -135,6 +137,10 @@ export default function RequestProduct() {
   // Same key is reused on every retry of the same form => the server never creates duplicates.
   const submissionKey = useRef(newKey());
   const formRef = useRef(null);
+
+  useEffect(() => {
+    setValues((v) => ({ ...v, productCategory: requestedCategory }));
+  }, [requestedCategory]);
 
   const set = (k) => (e) => {
     const val = e?.target ? e.target.value : e;
@@ -196,7 +202,7 @@ export default function RequestProduct() {
   };
 
   const reset = () => {
-    setValues(INITIAL);
+    setValues({ ...INITIAL, productCategory: requestedCategory });
     setImage(null);
     setErrors({});
     setFormError('');
@@ -219,11 +225,11 @@ export default function RequestProduct() {
             description: 'Submit your product, store and delivery details to request a local delivery through City Delivery Services.',
             breadcrumb: true,
           }),
-          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Request a Product', path: '/request' }], '/request'),
+          breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Request a Service', path: '/request' }], '/request'),
         ]}
       />
       <PageHero
-        eyebrow="Request a product"
+        eyebrow="Request a service"
         title="Request a Delivery Service"
         description="Submit your product, store and delivery details. Our team will review your request and contact you with the next steps."
       />

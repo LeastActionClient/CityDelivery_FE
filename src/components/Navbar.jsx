@@ -1,10 +1,23 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, X, ArrowRight, Bike } from 'lucide-react';
+import { Menu, X, ArrowRight, Bike, ChevronDown, ShoppingBasket, Shirt, Smartphone, CookingPot, HeartPulse, BookOpen, Gift, Package } from 'lucide-react';
 import Logo from './Logo.jsx';
 import Button from './Button.jsx';
 import { NAV_LINKS } from '../utils/config.js';
+
+const REQUEST_SERVICES = [
+  { label: 'Groceries', category: 'Groceries', icon: ShoppingBasket },
+  { label: 'Fashion & Apparel', category: 'Fashion & Apparel', icon: Shirt },
+  { label: 'Electronics', category: 'Electronics', icon: Smartphone },
+  { label: 'Home & Kitchen', category: 'Home & Kitchen', icon: CookingPot },
+  { label: 'Health & Beauty', category: 'Health & Beauty', icon: HeartPulse },
+  { label: 'Books & Stationery', category: 'Books & Stationery', icon: BookOpen },
+  { label: 'Gifts', category: 'Gifts', icon: Gift },
+  { label: 'Other', category: 'Other', icon: Package },
+];
+
+const serviceLink = (category) => `/request?category=${encodeURIComponent(category)}`;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -70,9 +83,28 @@ export default function Navbar() {
           <NavLink to="/become-a-rider" className={riderCtaCls}>
             <Bike size={16} /> Become a Rider
           </NavLink>
-          <Button to="/request" size="sm" magnetic className="hidden sm:inline-flex">
-            Request a Product <ArrowRight size={16} />
-          </Button>
+          <div className="group relative hidden sm:block">
+            <Button to="/request" size="sm" magnetic aria-haspopup="menu">
+              Request a Service
+              <ChevronDown size={16} className="transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" />
+            </Button>
+            <div className="invisible absolute right-0 top-full z-50 w-72 pt-3 opacity-0 transition duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <div role="menu" aria-label="Request service options" className="rounded-3xl bg-white p-3 shadow-lift ring-1 ring-black/5">
+                <p className="px-3 pb-2 pt-1 text-xs font-extrabold uppercase tracking-[0.14em] text-brand-muted">Request a service</p>
+                <NavLink to="/request" role="menuitem" className="flex items-center gap-3 rounded-2xl bg-brand-light px-3 py-2.5 text-sm font-extrabold text-brand-dark transition hover:bg-brand-yellow/20">
+                  <ArrowRight size={17} className="text-brand-green" /> General request
+                </NavLink>
+                <div className="my-2 h-px bg-black/5" />
+                <div className="grid gap-1">
+                  {REQUEST_SERVICES.map(({ label, category, icon: Icon }) => (
+                    <NavLink key={category} to={serviceLink(category)} role="menuitem" className="flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-semibold text-brand-text transition hover:bg-brand-light hover:text-brand-dark">
+                      <Icon size={16} className="shrink-0 text-brand-green" /> {label}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
@@ -125,8 +157,18 @@ export default function Navbar() {
               <Bike size={18} /> Become a Rider <ArrowRight size={17} />
             </NavLink>
             <Button to="/request" className="mt-2 w-full" size="lg">
-              Request a Product <ArrowRight size={18} />
+              Request a Service <ArrowRight size={18} />
             </Button>
+            <div className="mt-3 rounded-2xl bg-white/5 p-3">
+              <p className="px-2 pb-2 text-xs font-extrabold uppercase tracking-[0.14em] text-brand-yellow">Request by service</p>
+              <div className="grid grid-cols-2 gap-1">
+                {REQUEST_SERVICES.map(({ label, category, icon: Icon }) => (
+                  <NavLink key={category} to={serviceLink(category)} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 hover:text-white">
+                    <Icon size={15} className="shrink-0 text-brand-yellow" /> {label}
+                  </NavLink>
+                ))}
+              </div>
+            </div>
           </motion.nav>
         )}
       </AnimatePresence>

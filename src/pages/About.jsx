@@ -85,7 +85,7 @@ export default function About() {
       <section className="py-24 text-center">
         <Reveal className="container-x">
           <h2 className="text-4xl font-extrabold text-brand-dark sm:text-5xl">Let us know what you need.</h2>
-          <div className="mt-8"><Button to="/request" size="lg" magnetic>Request a Product <ArrowRight size={20} /></Button></div>
+          <div className="mt-8"><Button to="/request" size="lg" magnetic>Request a Service <ArrowRight size={20} /></Button></div>
         </Reveal>
       </section>
     </>

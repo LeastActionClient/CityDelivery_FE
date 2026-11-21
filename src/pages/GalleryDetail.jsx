@@ -87,7 +87,7 @@ export default function GalleryDetail() {
             </Stagger>
             <Reveal delay={0.15}>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Button to="/request">Request a product <ArrowRight className="h-4 w-4" /></Button>
+                <Button to="/request">Request a Service <ArrowRight className="h-4 w-4" /></Button>
                 <Button to="/how-it-works" variant="outline">How it works</Button>
               </div>
             </Reveal>

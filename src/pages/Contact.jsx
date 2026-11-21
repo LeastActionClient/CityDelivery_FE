@@ -145,7 +145,7 @@ export default function Contact() {
             <div className="rounded-4xl bg-gradient-to-br from-brand-yellow to-brand-yellow-deep p-8">
               <h3 className="text-2xl font-extrabold text-brand-dark">Looking for a product?</h3>
               <p className="mt-2 text-brand-dark/75">Skip the message and send us a request directly.</p>
-              <Button to="/request" className="mt-6">Request a Product <ArrowRight size={18} /></Button>
+              <Button to="/request" className="mt-6">Request a Service <ArrowRight size={18} /></Button>
             </div>
           </Reveal>
         </div>
