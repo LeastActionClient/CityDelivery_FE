@@ -207,8 +207,8 @@ export default function RequestProduct() {
   return (
     <>
       <SEO
-        title="Request Delivery in Vellore | City Delivery Services"
-        description="Request local delivery in Vellore by sharing your product, store and delivery details with City Delivery Services."
+        title="Request a Delivery | City Delivery Services Vellore"
+        description="Submit your product, store and delivery details to request a local delivery through City Delivery Services."
         path="/request"
         structuredData={[
           businessSchema(),
@@ -216,7 +216,7 @@ export default function RequestProduct() {
           webPageSchema({
             path: '/request',
             name: 'Request a Delivery Service',
-            description: 'Request local delivery in Vellore by sharing your product, store and delivery details with City Delivery Services.',
+            description: 'Submit your product, store and delivery details to request a local delivery through City Delivery Services.',
             breadcrumb: true,
           }),
           breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Request a Product', path: '/request' }], '/request'),

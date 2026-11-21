@@ -13,8 +13,8 @@ export default function Terms() {
   return (
     <>
       <SEO
-        title="Terms and Conditions | City Delivery Services Vellore"
-        description="Read the terms for submitting product and delivery requests to City Delivery Services in Vellore, Tamil Nadu."
+        title="Terms and Conditions | City Delivery Services"
+        description="Review the terms and conditions governing the use of City Delivery Services and its delivery request services."
         path="/terms"
         structuredData={[
           businessSchema(),
@@ -22,7 +22,7 @@ export default function Terms() {
           webPageSchema({
             path: '/terms',
             name: 'Terms and Conditions',
-            description: 'Read the terms for submitting product and delivery requests to City Delivery Services in Vellore, Tamil Nadu.',
+            description: 'Review the terms and conditions governing the use of City Delivery Services and its delivery request services.',
             breadcrumb: true,
           }),
           breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Terms and Conditions', path: '/terms' }], '/terms'),

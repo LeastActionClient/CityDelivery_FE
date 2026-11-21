@@ -58,8 +58,8 @@ export default function Privacy() {
   return (
     <>
       <SEO
-        title="Privacy Policy | City Delivery Services Vellore"
-        description="Read how City Delivery Services handles product requests, contact messages, images and service communications in Vellore."
+        title="Privacy Policy | City Delivery Services"
+        description="Read the City Delivery Services privacy policy to understand how customer information is collected, used and protected."
         path="/privacy"
         structuredData={[
           businessSchema(),
@@ -67,7 +67,7 @@ export default function Privacy() {
           webPageSchema({
             path: '/privacy',
             name: 'Privacy Policy',
-            description: 'Read how City Delivery Services handles product requests, contact messages, images and service communications in Vellore.',
+            description: 'Read the City Delivery Services privacy policy to understand how customer information is collected, used and protected.',
             breadcrumb: true,
           }),
           breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy', path: '/privacy' }], '/privacy'),

@@ -59,8 +59,8 @@ export default function Contact() {
   return (
     <>
       <SEO
-        title="Contact City Delivery Services in Vellore"
-        description="Contact City Delivery Services in Vellore about a product request, local delivery question or service information."
+        title="Contact City Delivery Services | Vellore"
+        description="Contact City Delivery Services for questions, delivery requests and assistance with local delivery services in Vellore."
         path="/contact"
         structuredData={[
           businessSchema(),
@@ -68,7 +68,7 @@ export default function Contact() {
           webPageSchema({
             path: '/contact',
             name: 'Contact City Delivery Services',
-            description: 'Contact City Delivery Services in Vellore about a product request, local delivery question or service information.',
+            description: 'Contact City Delivery Services for questions, delivery requests and assistance with local delivery services in Vellore.',
             breadcrumb: true,
           }),
           breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Contact Us', path: '/contact' }], '/contact'),

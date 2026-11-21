@@ -19,7 +19,7 @@ export default function About() {
     <>
       <SEO
         title="About City Delivery Services | Local Delivery in Vellore"
-        description="Learn how City Delivery Services supports customers in Vellore with clear product requests, store details and personal follow-up."
+        description="Learn about City Delivery Services and our mission to make local product pickup and delivery more convenient in Vellore."
         path="/about"
         structuredData={[
           businessSchema(),
@@ -27,7 +27,7 @@ export default function About() {
           webPageSchema({
             path: '/about',
             name: 'About City Delivery Services',
-            description: 'Learn how City Delivery Services supports customers in Vellore with clear product requests, store details and personal follow-up.',
+            description: 'Learn about City Delivery Services and our mission to make local product pickup and delivery more convenient in Vellore.',
             breadcrumb: true,
           }),
           breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About Us', path: '/about' }], '/about'),

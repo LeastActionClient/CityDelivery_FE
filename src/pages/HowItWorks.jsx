@@ -23,7 +23,7 @@ export default function HowItWorks() {
     <>
       <SEO
         title="How It Works | City Delivery Services Vellore"
-        description="See how to submit a product and store request in Vellore, from entering details to confirmation from our team."
+        description="Discover how City Delivery Services works. Submit your product and store details to request local delivery in Vellore."
         path="/how-it-works"
         structuredData={[
           businessSchema(),
@@ -31,7 +31,7 @@ export default function HowItWorks() {
           webPageSchema({
             path: '/how-it-works',
             name: 'How City Delivery Services Works',
-            description: 'See how to submit a product and store request in Vellore, from entering details to confirmation from our team.',
+            description: 'Discover how City Delivery Services works. Submit your product and store details to request local delivery in Vellore.',
             breadcrumb: true,
           }),
           breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'How It Works', path: '/how-it-works' }], '/how-it-works'),

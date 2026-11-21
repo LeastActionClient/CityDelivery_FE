@@ -973,7 +973,7 @@ export default function Home() {
     <Fragment key={animationKey}>
       <SEO
         title="City Delivery Services in Vellore | Reliable Local Delivery"
-        description="Looking for reliable city delivery services in Vellore? City Delivery Services helps customers access convenient local delivery solutions in Vellore, Tamil Nadu."
+        description="Looking for convenient local delivery in Vellore? City Delivery Services helps customers connect with stores and arrange delivery of everyday products."
         path="/"
         structuredData={[
           businessSchema(),
@@ -981,7 +981,7 @@ export default function Home() {
           webPageSchema({
             path: '/',
             name: 'City Delivery Services in Vellore',
-            description: 'Looking for reliable city delivery services in Vellore? City Delivery Services helps customers access convenient local delivery solutions in Vellore, Tamil Nadu.',
+            description: 'Looking for convenient local delivery in Vellore? City Delivery Services helps customers connect with stores and arrange delivery of everyday products.',
           }),
           serviceSchema(),
           faqSchema(FAQS),

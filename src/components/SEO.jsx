@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 export const SITE_URL = 'https://www.citydeliveryservices.com';
 const SITE_NAME = 'City Delivery Services';
@@ -47,7 +47,7 @@ export default function SEO({
     structuredData.length ? { '@context': 'https://schema.org', '@graph': structuredData } : null
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.title = title;
     setMeta('name', 'description', description);
     setMeta('name', 'robots', noindex ? 'noindex,nofollow' : 'index,follow');
