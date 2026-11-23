@@ -63,7 +63,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14 }}
           style={{ transformPerspective: 1000 }}
-          className="md:col-span-5"
+          className="md:col-span-4"
         >
           <Link to="/" className="group inline-flex" aria-label="City Delivery Services — home">
             <img src={logo2} alt="City Delivery Services" className="h-28 w-auto max-w-full rounded-2xl object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-32" />
@@ -106,6 +106,22 @@ export default function Footer() {
           </Link>
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 50, rotateX: -25 }}
+          whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.18 }}
+          style={{ transformPerspective: 1000 }}
+          className="md:col-span-2"
+        >
+          <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">City where we serve</h3>
+          <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
+          <div className="mt-5 flex items-center gap-3 text-white/75">
+            <MapPin size={18} className="shrink-0 text-[#FFC928]" />
+            <span>{SITE.serviceCity}</span>
+          </div>
+        </motion.div>
+
         {/* contact */}
         <motion.div
           initial={{ opacity: 0, y: 50, rotateX: -25 }}
@@ -113,7 +129,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.24 }}
           style={{ transformPerspective: 1000 }}
-          className="md:col-span-4"
+          className="md:col-span-3"
         >
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">Get in touch</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />

@@ -830,7 +830,7 @@ function CTA() {
               <span className="cta-dot h-2 w-2 rounded-full bg-[#FFC928]" /> Quick &amp; simple
             </span>
             <h2 className="mt-7 max-w-xl text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-[3.4rem]">
-              Ready to request <span className="italic text-[#FFC928]">your product?</span>
+              Ready to request <span className="italic text-[#FFC928]">your service?</span>
             </h2>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">It takes a couple of minutes. Tell us the product and the store, and we will take it from there.</p>
             <ul className="mt-7 flex flex-wrap gap-x-7 gap-y-3 text-sm text-white/75">

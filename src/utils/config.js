@@ -7,6 +7,7 @@ export const SITE = {
   email: env.VITE_CONTACT_EMAIL || 'citydeliveryservicesofficial@gmail.com',
   phone: env.VITE_CONTACT_PHONE || '8189800888',
   address: env.VITE_BUSINESS_ADDRESS || 'Head office: No. 7, Thendral Nagar, Sathuvachari, Vellore, 632009 — Above Citywash Building',
+  serviceCity: env.VITE_SERVICE_CITY || 'Vellore',
   social: {
     Instagram: env.VITE_SOCIAL_INSTAGRAM || '',
     Facebook: env.VITE_SOCIAL_FACEBOOK || '',
