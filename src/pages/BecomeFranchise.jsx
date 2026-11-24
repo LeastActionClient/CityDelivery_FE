@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -137,23 +137,79 @@ const NEEDS = [
   'Optional business or address proof documents',
 ];
 
-const MARQUEE_CSS = `
+const PAGE_CSS = `
 @keyframes cds-marquee-rtl { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .cds-marquee { display: flex; width: max-content; animation: cds-marquee-rtl var(--cds-speed, 45s) linear infinite; }
 .cds-marquee-wrap:hover .cds-marquee { animation-play-state: paused; }
-.cds-grid-bg { background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 22px 22px; }
-@media (prefers-reduced-motion: reduce) { .cds-marquee { animation: none; } }
+.cds-dots { background-image: radial-gradient(rgba(20,20,20,0.13) 1.4px, transparent 1.4px); background-size: 24px 24px; }
+.cds-dots-light { background-image: radial-gradient(rgba(255,255,255,0.10) 1.4px, transparent 1.4px); background-size: 24px 24px; }
+.cds-stripes { background-image: repeating-linear-gradient(135deg, rgba(20,20,20,0.06) 0 14px, transparent 14px 28px); }
+@keyframes cds-shine { 0% { transform: translateX(-120%) skewX(-20deg); } 60%, 100% { transform: translateX(260%) skewX(-20deg); } }
+.cds-shine::after { content: ''; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); animation: cds-shine 4.5s ease-in-out infinite; pointer-events: none; }
+@keyframes cds-spin-slow { to { transform: rotate(360deg); } }
+.cds-spin-slow { animation: cds-spin-slow 28s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .cds-marquee, .cds-shine::after, .cds-spin-slow { animation: none; } }
 `;
 
-function Marquee({ children, speed = 45 }) {
+/* ---------- 3D tilt wrapper: card follows the cursor in 3D ---------- */
+function Tilt({ children, className = '', max = 10 }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [max, -max]), { stiffness: 180, damping: 16 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-max, max]), { stiffness: 180, damping: 16 });
+
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    x.set((e.clientX - r.left) / r.width - 0.5);
+    y.set((e.clientY - r.top) / r.height - 0.5);
+  };
+  const onLeave = () => { x.set(0); y.set(0); };
+
   return (
-    <div className="cds-marquee-wrap relative overflow-hidden">
-      <div className="cds-marquee gap-5 pr-5" style={{ '--cds-speed': `${speed}s` }}>
+    <motion.div
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ rotateX, rotateY, transformPerspective: 900, transformStyle: 'preserve-3d' }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function Float({ children, className = '', delay = 0, amount = 12 }) {
+  return (
+    <motion.div
+      className={className}
+      animate={{ y: [0, -amount, 0] }}
+      transition={{ duration: 4 + delay, repeat: Infinity, ease: 'easeInOut', delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function Marquee({ children, speed = 45, fade = 'from-brand-yellow' }) {
+  return (
+    <div className="cds-marquee-wrap relative overflow-hidden py-6" style={{ perspective: '1200px' }}>
+      <div className="cds-marquee gap-6 pr-6" style={{ '--cds-speed': `${speed}s` }}>
         {children}
         {children}
       </div>
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-brand-dark to-transparent sm:w-28" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-brand-dark to-transparent sm:w-28" />
+      <div className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-14 bg-gradient-to-r ${fade} to-transparent sm:w-28`} />
+      <div className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-14 bg-gradient-to-l ${fade} to-transparent sm:w-28`} />
+    </div>
+  );
+}
+
+function SectionTitle({ eyebrow, title, text, dark = false, center = true }) {
+  return (
+    <div className={center ? 'mx-auto max-w-3xl text-center' : 'max-w-2xl'}>
+      <span className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em] ${dark ? 'bg-brand-yellow text-brand-dark' : 'bg-brand-dark text-brand-yellow'}`}>
+        <Sparkles size={14} /> {eyebrow}
+      </span>
+      <h2 className={`mt-5 text-4xl font-extrabold leading-tight sm:text-5xl ${dark ? 'text-white' : 'text-brand-dark'}`}>{title}</h2>
+      {text && <p className={`mt-4 text-lg leading-relaxed ${dark ? 'text-white/70' : 'text-brand-dark/70'}`}>{text}</p>}
     </div>
   );
 }
@@ -180,7 +236,7 @@ export default function BecomeFranchise() {
 
   return (
     <>
-      <style>{MARQUEE_CSS}</style>
+      <style>{PAGE_CSS}</style>
       <SEO
         title="Become a Franchise Partner | City Delivery Services"
         description={description}
@@ -205,330 +261,364 @@ export default function BecomeFranchise() {
         </div>
       </PageHero>
 
-      {/* ---------- STATS BAND ---------- */}
-      <section className="bg-brand-yellow px-4 py-8 sm:px-8">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 lg:grid-cols-4">
+      {/* ================= 3D HERO STAGE (YELLOW) ================= */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-yellow via-brand-yellow to-brand-yellow-deep px-4 pb-24 pt-16 sm:px-8">
+        <div className="cds-dots pointer-events-none absolute inset-0" />
+        <div className="cds-spin-slow pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full border-[40px] border-dashed border-brand-dark/10" />
+        <div className="pointer-events-none absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-white/30 blur-3xl" />
+
+        <div className="relative mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
+          <div>
+            <SectionTitle
+              center={false}
+              eyebrow="Your city. Local delivery."
+              title="A clear process to build your own delivery base"
+              text="We are building a local delivery network. Franchise partners help expand coverage, coordinate local operations and support customers in their area."
+            />
+            <ul className="mt-7 space-y-3">
+              {['Applications are reviewed individually', 'Terms are confirmed in writing', 'Track progress any time with your Application ID'].map((t) => (
+                <li key={t} className="flex items-center gap-3 font-bold text-brand-dark">
+                  <span className="grid h-7 w-7 place-items-center rounded-full bg-brand-dark text-brand-yellow"><CheckCircle2 size={16} /></span>
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link to="/franchise/register" className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-dark px-7 py-4 text-sm font-extrabold text-brand-yellow shadow-[0_6px_0_0_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 active:translate-y-1 active:shadow-none">
+                Start application <ArrowRight size={16} />
+              </Link>
+              <Link to="/franchise/status" className="inline-flex items-center justify-center rounded-full bg-white/60 px-7 py-4 text-sm font-extrabold text-brand-dark ring-2 ring-brand-dark transition hover:bg-white">
+                Check status
+              </Link>
+            </div>
+          </div>
+
+          {/* 3D stacked photo cards */}
+          <div className="relative mx-auto h-[26rem] w-full max-w-lg sm:h-[30rem]" style={{ perspective: '1200px' }}>
+            <motion.div
+              initial={{ opacity: 0, x: 80, rotateY: -30 }}
+              whileInView={{ opacity: 1, x: 0, rotateY: -12 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="absolute left-0 top-6 h-64 w-64 overflow-hidden rounded-4xl shadow-[14px_18px_0_0_rgba(20,20,20,0.9)] ring-4 ring-brand-dark sm:h-72 sm:w-72"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              <Img src={IMG.courier} alt="Courier handing over a parcel" className="h-full w-full object-cover" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 80, rotateY: -30 }}
+              whileInView={{ opacity: 1, x: 0, rotateY: -12 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.15 }}
+              className="absolute bottom-0 right-0 h-64 w-64 overflow-hidden rounded-4xl shadow-[14px_18px_0_0_rgba(20,20,20,0.9)] ring-4 ring-brand-dark sm:h-72 sm:w-72"
+              style={{ transformStyle: 'preserve-3d' }}
+            >
+              <img src={franchisePartnerImage} alt="Delivery partner supporting local deliveries" className="h-full w-full object-cover" loading="lazy" />
+            </motion.div>
+            <Float className="absolute right-4 top-0 sm:right-10" delay={0.2}>
+              <div className="flex items-center gap-2 rounded-2xl bg-brand-dark px-4 py-3 text-sm font-extrabold text-brand-yellow shadow-lift">
+                <Bike size={18} /> Local riders
+              </div>
+            </Float>
+            <Float className="absolute bottom-24 left-0 sm:-left-6" delay={0.8} amount={16}>
+              <div className="flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-brand-dark shadow-lift ring-2 ring-brand-dark">
+                <MapPin size={18} /> Your area
+              </div>
+            </Float>
+            <Float className="absolute left-1/3 top-1/2" delay={1.4} amount={10}>
+              <span className="grid h-16 w-16 place-items-center rounded-3xl bg-brand-dark text-brand-yellow shadow-lift">
+                <Package size={30} />
+              </span>
+            </Float>
+          </div>
+        </div>
+
+        {/* stats */}
+        <div className="relative mx-auto mt-20 grid max-w-6xl grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map(({ icon: Icon, value, label }, i) => (
             <motion.div
               key={label}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.07 }}
-              className="flex items-center gap-3 rounded-3xl bg-brand-dark/95 p-4 text-white shadow-lift sm:p-5"
+              transition={{ delay: i * 0.08 }}
             >
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-yellow text-brand-dark"><Icon size={22} /></span>
-              <div>
-                <p className="font-display text-xl font-extrabold leading-none sm:text-2xl">{value}</p>
-                <p className="mt-1 text-xs font-semibold text-white/60 sm:text-sm">{label}</p>
-              </div>
+              <Tilt max={14} className="cds-shine relative flex items-center gap-3 overflow-hidden rounded-3xl bg-brand-dark p-4 text-white shadow-[0_8px_0_0_rgba(0,0,0,0.35)] sm:p-5">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-yellow text-brand-dark" style={{ transform: 'translateZ(30px)' }}><Icon size={24} /></span>
+                <div>
+                  <p className="font-display text-xl font-extrabold leading-none text-brand-yellow sm:text-2xl">{value}</p>
+                  <p className="mt-1 text-xs font-semibold text-white/65 sm:text-sm">{label}</p>
+                </div>
+              </Tilt>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ---------- WHY PARTNER ---------- */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-dark via-brand-dark to-black px-4 py-20 text-white sm:px-8">
-        <div className="cds-grid-bg pointer-events-none absolute inset-0" />
-        <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-brand-yellow/20 blur-3xl" />
-        <div className="pointer-events-none absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-brand-green/20 blur-3xl" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-          <Reveal>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="relative col-span-2 flex min-h-[300px] flex-col justify-end overflow-hidden rounded-4xl bg-brand-dark p-8 shadow-lift ring-1 ring-white/10">
-                <img src={franchisePartnerImage} alt="Delivery partner supporting local deliveries" className="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/75 to-brand-dark/10" />
-                <div className="relative z-10">
-                  <span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-yellow text-brand-dark"><Store size={24} /></span>
-                  <p className="mt-5 font-display text-3xl font-extrabold leading-tight sm:text-4xl">Your city. Local delivery. A clear process.</p>
-                  <p className="mt-3 text-sm font-semibold text-white/70">Applications are reviewed individually. Terms are confirmed in writing.</p>
-                </div>
-              </div>
-              <div className="relative h-44 overflow-hidden rounded-3xl ring-1 ring-white/10">
-                <Img src={IMG.courier} alt="Courier handing over a parcel" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/70 to-transparent" />
-              </div>
-              <div className="relative h-44 overflow-hidden rounded-3xl ring-1 ring-white/10">
-                <Img src={IMG.bike} alt="Delivery rider on a bike" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/70 to-transparent" />
-              </div>
-            </div>
-          </Reveal>
-
-          <div>
-            <p className="eyebrow text-brand-yellow">Why partner with us</p>
-            <h2 className="mt-4 text-4xl font-extrabold">Opportunity with clear expectations</h2>
-            <p className="mt-5 text-lg leading-relaxed text-white/70">
-              We are building a local delivery network. Franchise partners help expand coverage, coordinate local operations and support customers in their area.
-            </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {BENEFITS.map(({ icon: Icon, title, text }, i) => (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: 0, x: 40 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -6 }}
-                  className="rounded-3xl bg-white/[0.07] p-5 ring-1 ring-white/10 backdrop-blur"
-                >
-                  <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-yellow text-brand-dark"><Icon size={22} /></span>
-                  <h3 className="mt-4 text-lg font-extrabold">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/65">{text}</p>
-                </motion.div>
-              ))}
-            </div>
+      {/* ================= WHY PARTNER (DARK) ================= */}
+      <section className="relative overflow-hidden bg-brand-dark px-4 py-24 sm:px-8">
+        <div className="cds-dots-light pointer-events-none absolute inset-0" />
+        <div className="pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-brand-yellow/25 blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-brand-yellow/15 blur-3xl" />
+        <div className="relative mx-auto max-w-6xl">
+          <SectionTitle dark eyebrow="Why partner with us" title="Opportunity with clear expectations" text="Everything you need to know before you apply — in plain language." />
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" style={{ perspective: '1200px' }}>
+            {BENEFITS.map(({ icon: Icon, title, text }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, x: 70 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12 }}
+              >
+                <Tilt className="h-full rounded-4xl bg-gradient-to-br from-brand-yellow to-brand-yellow-deep p-6 text-brand-dark shadow-[0_10px_0_0_rgba(255,255,255,0.12)]">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-dark text-brand-yellow shadow-lift" style={{ transform: 'translateZ(40px)' }}><Icon size={26} /></span>
+                  <h3 className="mt-5 text-xl font-extrabold" style={{ transform: 'translateZ(25px)' }}>{title}</h3>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-brand-dark/75">{text}</p>
+                </Tilt>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ---------- MOVING CARDS (RIGHT → LEFT) ---------- */}
-      <section className="relative overflow-hidden bg-brand-dark py-20">
-        <div className="cds-grid-bg pointer-events-none absolute inset-0" />
-        <div className="relative mx-auto max-w-6xl px-4 text-center sm:px-8">
-          <p className="eyebrow text-brand-yellow">What you can support</p>
-          <h2 className="mt-4 text-4xl font-extrabold text-white">Local delivery, built around your area</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/65">
-            A glimpse of the day-to-day work franchise partners discuss with our team. Exact scope is confirmed in a written agreement.
-          </p>
+      {/* ================= MOVING CARDS RIGHT → LEFT (YELLOW) ================= */}
+      <section className="relative overflow-hidden bg-brand-yellow py-24">
+        <div className="cds-stripes pointer-events-none absolute inset-0" />
+        <div className="relative px-4 sm:px-8">
+          <SectionTitle eyebrow="What you can support" title="Local delivery, built around your area" text="A glimpse of the day-to-day work franchise partners discuss with our team. Exact scope is confirmed in a written agreement." />
         </div>
 
-        <div className="relative mt-12">
-          <Marquee speed={55}>
+        <div className="relative mt-10">
+          <Marquee speed={60} fade="from-brand-yellow">
             {SHOWCASE.map(({ img, icon: Icon, title, text }) => (
-              <div key={title} className="group relative h-80 w-72 shrink-0 overflow-hidden rounded-4xl shadow-lift ring-1 ring-white/10 sm:w-80">
+              <div
+                key={title}
+                className="group relative h-96 w-72 shrink-0 overflow-hidden rounded-4xl shadow-[10px_12px_0_0_rgba(20,20,20,0.9)] ring-4 ring-brand-dark transition duration-500 [transform:perspective(900px)_rotateY(-8deg)] hover:[transform:perspective(900px)_rotateY(0deg)_translateY(-10px)] sm:w-80"
+              >
                 <Img src={img} alt={title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent" />
+                <span className="absolute left-5 top-5 grid h-12 w-12 place-items-center rounded-2xl bg-brand-yellow text-brand-dark shadow-lift"><Icon size={24} /></span>
                 <div className="absolute inset-x-0 bottom-0 p-6">
-                  <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-yellow text-brand-dark"><Icon size={22} /></span>
-                  <h3 className="mt-3 text-xl font-extrabold text-white">{title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-white/70">{text}</p>
+                  <h3 className="text-xl font-extrabold text-white">{title}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-white/75">{text}</p>
                 </div>
               </div>
             ))}
           </Marquee>
         </div>
 
-        <div className="relative mt-6">
-          <Marquee speed={38}>
+        {/* tilted ribbon */}
+        <div className="relative mt-10 -rotate-2 bg-brand-dark py-4 shadow-lift">
+          <Marquee speed={35} fade="from-brand-dark">
             {CHIPS.map((chip) => (
-              <span key={chip} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white/10 px-5 py-3 text-sm font-bold text-white ring-1 ring-white/15">
-                <Sparkles size={16} className="text-brand-yellow" />
-                {chip}
+              <span key={chip} className="inline-flex shrink-0 items-center gap-3 text-lg font-extrabold uppercase tracking-wide text-brand-yellow">
+                <Sparkles size={18} /> {chip}
               </span>
             ))}
           </Marquee>
         </div>
       </section>
 
-      {/* ---------- HOW IT WORKS ---------- */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-brand-yellow via-brand-yellow to-brand-yellow-deep px-4 py-20 sm:px-8">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full bg-white/30 blur-3xl" />
+      {/* ================= HOW IT WORKS (CREAM + YELLOW) ================= */}
+      <section className="relative overflow-hidden bg-brand-light px-4 py-24 sm:px-8">
+        <div className="cds-dots pointer-events-none absolute inset-0" />
+        <div className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-brand-yellow/50 blur-3xl" />
         <div className="relative mx-auto max-w-6xl">
-          <p className="eyebrow text-center text-brand-dark/70">How it works</p>
-          <h2 className="mt-4 text-center text-4xl font-extrabold text-brand-dark">From application to activation</h2>
-          <div className="relative mt-14 grid gap-5 md:grid-cols-4">
-            <div className="pointer-events-none absolute left-[12%] right-[12%] top-10 hidden h-0.5 bg-brand-dark/20 md:block" />
+          <SectionTitle eyebrow="How it works" title="From application to activation" />
+          <div className="relative mt-16 grid gap-6 md:grid-cols-4" style={{ perspective: '1200px' }}>
+            <div className="pointer-events-none absolute left-[12%] right-[12%] top-14 hidden h-1 rounded-full bg-brand-dark/20 md:block" />
             {STEPS.map(({ n, icon: Icon, title, text }, index) => (
               <motion.div
                 key={n}
-                initial={{ opacity: 0, x: 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, x: 70, rotateY: 25 }}
+                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.12 }}
-                whileHover={{ y: -8 }}
-                className="relative rounded-3xl bg-brand-dark p-6 text-white shadow-lift"
+                transition={{ delay: index * 0.14, duration: 0.6 }}
               >
-                <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-yellow text-brand-dark shadow-soft"><Icon size={26} /></span>
-                <span className="absolute right-5 top-4 font-display text-5xl font-extrabold text-white/10">{n}</span>
-                <h3 className="mt-5 text-xl font-extrabold">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">
-                  {text || `Optional: pay ${feeText} now or later from the status page.`}
-                </p>
+                <Tilt className="relative h-full rounded-4xl bg-white p-6 text-brand-dark shadow-[0_10px_0_0_rgba(20,20,20,0.9)] ring-4 ring-brand-dark">
+                  <span className="grid h-16 w-16 place-items-center rounded-3xl bg-brand-yellow text-brand-dark shadow-[0_5px_0_0_rgba(20,20,20,0.9)] ring-2 ring-brand-dark" style={{ transform: 'translateZ(45px)' }}>
+                    <Icon size={28} />
+                  </span>
+                  <span className="absolute right-5 top-4 font-display text-6xl font-extrabold text-brand-yellow">{n}</span>
+                  <h3 className="mt-6 text-xl font-extrabold" style={{ transform: 'translateZ(25px)' }}>{title}</h3>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-brand-dark/70">
+                    {text || `Optional: pay ${feeText} now or later from the status page.`}
+                  </p>
+                </Tilt>
               </motion.div>
             ))}
           </div>
-          <p className="mt-10 rounded-3xl bg-brand-dark/90 p-5 text-center text-sm leading-relaxed text-white/75 ring-1 ring-black/10">
+          <p className="mx-auto mt-12 max-w-3xl rounded-3xl bg-brand-dark p-5 text-center text-sm leading-relaxed text-white/80 shadow-lift">
             The initial payment policy ({config?.refundPolicy || 'as shown at payment'}) is displayed before payment. Submission does not guarantee approval, an agreement, exclusive territory or income.
           </p>
         </div>
       </section>
 
-      {/* ---------- REVIEW CRITERIA ---------- */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-dark via-[#10211c] to-brand-dark px-4 py-20 sm:px-8">
-        <div className="cds-grid-bg pointer-events-none absolute inset-0" />
+      {/* ================= REVIEW CRITERIA (DARK) ================= */}
+      <section className="relative overflow-hidden bg-brand-dark px-4 py-24 sm:px-8">
+        <div className="cds-dots-light pointer-events-none absolute inset-0" />
+        <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-[40rem] -translate-x-1/2 rounded-full bg-brand-yellow/15 blur-3xl" />
         <div className="relative mx-auto max-w-6xl">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="eyebrow text-brand-yellow">Review criteria</p>
-              <h2 className="mt-4 text-4xl font-extrabold text-white">What our team looks at</h2>
-              <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/70">
-                We review the details you share to understand whether the proposed local setup can support delivery operations. Review does not guarantee approval.
-              </p>
-            </div>
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <SectionTitle dark center={false} eyebrow="Review criteria" title="What our team looks at" text="We review the details you share to understand whether the proposed local setup can support delivery operations. Review does not guarantee approval." />
             <Button to="/franchise/register">Start application</Button>
           </div>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" style={{ perspective: '1200px' }}>
             {REVIEW_POINTS.map(({ icon: Icon, img, title, text }, index) => (
               <motion.div
                 key={title}
-                initial={{ opacity: 0, x: 60 }}
+                initial={{ opacity: 0, x: 70 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="group overflow-hidden rounded-3xl bg-white/[0.06] ring-1 ring-white/10"
+                transition={{ delay: index * 0.12 }}
               >
-                <div className="relative h-40 overflow-hidden">
-                  <Img src={img} alt={title} className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent" />
-                  <span className="absolute bottom-3 left-4 grid h-11 w-11 place-items-center rounded-2xl bg-brand-yellow text-brand-dark"><Icon size={22} /></span>
-                </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-extrabold text-white">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/65">{text}</p>
-                </div>
+                <Tilt className="group h-full overflow-hidden rounded-4xl bg-brand-yellow text-brand-dark shadow-[0_10px_0_0_rgba(255,255,255,0.14)]">
+                  <div className="relative h-44 overflow-hidden">
+                    <Img src={img} alt={title} className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-yellow via-transparent to-transparent" />
+                    <span className="absolute right-4 top-4 grid h-12 w-12 place-items-center rounded-2xl bg-brand-dark text-brand-yellow shadow-lift" style={{ transform: 'translateZ(40px)' }}><Icon size={22} /></span>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-extrabold">{title}</h3>
+                    <p className="mt-2 text-sm font-medium leading-relaxed text-brand-dark/75">{text}</p>
+                  </div>
+                </Tilt>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ---------- FLEXIBLE PAYMENT ---------- */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-green via-brand-green to-brand-dark px-4 py-20 sm:px-8">
-        <div className="cds-grid-bg pointer-events-none absolute inset-0" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-          <div className="text-white">
-            <p className="eyebrow text-brand-yellow">Flexible initial payment</p>
-            <h2 className="mt-4 text-4xl font-extrabold">Apply first. Pay when you are ready.</h2>
-            <p className="mt-5 text-lg leading-relaxed text-white/80">
-              The initial payment is optional. Submit your application, save your Application ID and return to the status page whenever you want to complete the payment.
-            </p>
+      {/* ================= FLEXIBLE PAYMENT (YELLOW) ================= */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-yellow via-brand-yellow to-brand-yellow-deep px-4 py-24 sm:px-8">
+        <div className="cds-dots pointer-events-none absolute inset-0" />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
+          <div>
+            <SectionTitle center={false} eyebrow="Flexible initial payment" title="Apply first. Pay when you are ready." text="The initial payment is optional. Submit your application, save your Application ID and return to the status page whenever you want to complete the payment." />
             <div className="mt-8 space-y-4">
-              {[
-                'Submit your franchise application',
-                'Save the Application ID shown afterwards',
-                'Open the status page and pay any time',
-              ].map((step, index) => (
+              {['Submit your franchise application', 'Save the Application ID shown afterwards', 'Open the status page and pay any time'].map((step, index) => (
                 <motion.div
                   key={step}
-                  initial={{ opacity: 0, x: 50 }}
+                  initial={{ opacity: 0, x: 60 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.12 }}
-                  className="flex items-start gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15 backdrop-blur"
+                  className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-[0_6px_0_0_rgba(20,20,20,0.9)] ring-2 ring-brand-dark"
                 >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-yellow text-sm font-extrabold text-brand-dark">0{index + 1}</span>
-                  <span className="pt-1.5 font-bold">{step}</span>
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-dark text-sm font-extrabold text-brand-yellow">0{index + 1}</span>
+                  <span className="font-extrabold text-brand-dark">{step}</span>
                 </motion.div>
               ))}
             </div>
-            <div className="mt-8">
-              <Button to="/franchise/status" variant="outline">Open status page</Button>
+            <div className="mt-9">
+              <Link to="/franchise/status" className="inline-flex items-center gap-2 rounded-full bg-brand-dark px-7 py-4 text-sm font-extrabold text-brand-yellow shadow-[0_6px_0_0_rgba(0,0,0,0.35)] transition hover:-translate-y-0.5 active:translate-y-1 active:shadow-none">
+                Open status page <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
+
           <Reveal>
-            <div className="relative overflow-hidden rounded-4xl bg-brand-dark p-8 text-white shadow-lift ring-1 ring-white/10 sm:p-10">
-              <Img src={IMG.city} alt="City delivery coverage" className="absolute inset-0 h-full w-full object-cover opacity-20" />
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/80 to-brand-dark" />
-              <div className="relative">
-                <Wallet className="text-brand-yellow" size={42} />
-                <p className="mt-8 font-display text-6xl font-extrabold">{feeText}</p>
-                <p className="mt-2 text-sm font-bold uppercase tracking-[0.18em] text-white/50">Optional initial payment</p>
-                <div className="mt-8 space-y-5 border-t border-white/10 pt-8">
-                  {[
-                    { icon: Clock3, title: 'Pay now or later', text: 'Your Application ID unlocks the payment option on the status page.' },
-                    { icon: ShieldCheck, title: 'Secure payment flow', text: 'Payment is handled by the payment provider when online payment is enabled.' },
-                    { icon: CheckCircle2, title: 'Review continues', text: 'Your application remains under review whether or not you pay.' },
-                  ].map(({ icon: Icon, title, text }) => (
-                    <div key={title} className="flex gap-4">
-                      <Icon size={21} className="mt-0.5 shrink-0 text-brand-yellow" />
-                      <div>
-                        <p className="font-extrabold">{title}</p>
-                        <p className="mt-1 text-sm leading-relaxed text-white/60">{text}</p>
+            <div className="relative" style={{ perspective: '1200px' }}>
+              <Float className="absolute -right-3 -top-6 z-10" delay={0.3}>
+                <span className="grid h-16 w-16 place-items-center rounded-full bg-white text-3xl font-extrabold text-brand-dark shadow-lift ring-4 ring-brand-dark">₹</span>
+              </Float>
+              <Tilt max={8} className="cds-shine relative overflow-hidden rounded-4xl bg-brand-dark p-8 text-white shadow-[14px_16px_0_0_rgba(20,20,20,0.35)] sm:p-10">
+                <Img src={IMG.city} alt="City delivery coverage" className="absolute inset-0 h-full w-full object-cover opacity-20" />
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/70 to-brand-dark" />
+                <div className="relative">
+                  <Wallet className="text-brand-yellow" size={42} />
+                  <p className="mt-8 font-display text-6xl font-extrabold text-brand-yellow" style={{ transform: 'translateZ(40px)' }}>{feeText}</p>
+                  <p className="mt-2 text-sm font-bold uppercase tracking-[0.18em] text-white/55">Optional initial payment</p>
+                  <div className="mt-8 space-y-5 border-t border-white/15 pt-8">
+                    {[
+                      { icon: Clock3, title: 'Pay now or later', text: 'Your Application ID unlocks the payment option on the status page.' },
+                      { icon: ShieldCheck, title: 'Secure payment flow', text: 'Payment is handled by the payment provider when online payment is enabled.' },
+                      { icon: CheckCircle2, title: 'Review continues', text: 'Your application remains under review whether or not you pay.' },
+                    ].map(({ icon: Icon, title, text }) => (
+                      <div key={title} className="flex gap-4">
+                        <Icon size={21} className="mt-0.5 shrink-0 text-brand-yellow" />
+                        <div>
+                          <p className="font-extrabold">{title}</p>
+                          <p className="mt-1 text-sm leading-relaxed text-white/65">{text}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </Tilt>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* ---------- WHO CAN APPLY ---------- */}
-      <section className="relative overflow-hidden bg-brand-dark px-4 py-20 sm:px-8">
-        <div className="cds-grid-bg pointer-events-none absolute inset-0" />
-        <div className="relative mx-auto max-w-6xl text-center">
-          <p className="eyebrow text-brand-yellow">Who can apply</p>
-          <h2 className="mt-4 text-4xl font-extrabold text-white">Local operators with a clear plan</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/70">
-            If you can support local delivery coordination in a defined area, we would like to review your application. Terms are confirmed only after review and in writing.
-          </p>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+      {/* ================= WHO CAN APPLY (CREAM) ================= */}
+      <section className="relative overflow-hidden bg-brand-light px-4 py-24 sm:px-8">
+        <div className="cds-dots pointer-events-none absolute inset-0" />
+        <div className="relative mx-auto max-w-6xl">
+          <SectionTitle eyebrow="Who can apply" title="Local operators with a clear plan" text="If you can support local delivery coordination in a defined area, we would like to review your application. Terms are confirmed only after review and in writing." />
+          <div className="mt-14 grid gap-8 md:grid-cols-3" style={{ perspective: '1200px' }}>
             {WHO_CAN_APPLY.map(({ img, title, text }, index) => (
               <motion.div
                 key={title}
-                initial={{ opacity: 0, x: 60 }}
+                initial={{ opacity: 0, x: 70 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.12 }}
-                whileHover={{ y: -8 }}
-                className="group relative h-80 overflow-hidden rounded-4xl text-left shadow-lift ring-1 ring-white/10"
+                transition={{ delay: index * 0.14 }}
               >
-                <Img src={img} alt={title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-brand-dark/10" />
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <BadgeCheck size={28} className="text-brand-yellow" />
-                  <h3 className="mt-3 text-xl font-extrabold text-white">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/70">{text}</p>
-                </div>
+                <Tilt className="group relative h-96 overflow-hidden rounded-4xl text-left shadow-[10px_12px_0_0_rgba(20,20,20,0.9)] ring-4 ring-brand-dark">
+                  <Img src={img} alt={title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/55 to-transparent" />
+                  <span className="absolute left-5 top-5 grid h-12 w-12 place-items-center rounded-2xl bg-brand-yellow text-brand-dark shadow-lift" style={{ transform: 'translateZ(40px)' }}><BadgeCheck size={24} /></span>
+                  <div className="absolute inset-x-0 bottom-0 p-6" style={{ transform: 'translateZ(25px)' }}>
+                    <h3 className="text-2xl font-extrabold text-white">{title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-white/75">{text}</p>
+                  </div>
+                </Tilt>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ---------- NEEDS + FAQ ---------- */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#10211c] via-brand-dark to-black px-4 py-20 sm:px-8">
-        <div className="cds-grid-bg pointer-events-none absolute inset-0" />
-        <div className="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full bg-brand-yellow/10 blur-3xl" />
-        <div className="relative mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
+      {/* ================= NEEDS + FAQ (DARK) ================= */}
+      <section className="relative overflow-hidden bg-brand-dark px-4 py-24 sm:px-8">
+        <div className="cds-dots-light pointer-events-none absolute inset-0" />
+        <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-brand-yellow/20 blur-3xl" />
+        <div className="relative mx-auto grid max-w-6xl gap-14 lg:grid-cols-2">
           <div>
-            <p className="eyebrow text-brand-yellow">What you will need</p>
-            <h2 className="mt-4 text-4xl font-extrabold text-white">Keep these ready</h2>
-            <ul className="mt-7 space-y-3">
+            <SectionTitle dark center={false} eyebrow="What you will need" title="Keep these ready" />
+            <ul className="mt-8 space-y-3">
               {NEEDS.map((item, i) => (
                 <motion.li
                   key={item}
-                  initial={{ opacity: 0, x: 50 }}
+                  initial={{ opacity: 0, x: 60 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
-                  className="flex items-start gap-3 rounded-2xl bg-white/[0.07] p-4 text-white ring-1 ring-white/10"
+                  className="flex items-start gap-3 rounded-2xl bg-brand-yellow p-4 text-brand-dark shadow-[0_5px_0_0_rgba(255,255,255,0.14)]"
                 >
-                  <Building2 size={19} className="mt-0.5 shrink-0 text-brand-yellow" />
-                  <span className="font-semibold">{item}</span>
+                  <Building2 size={20} className="mt-0.5 shrink-0" />
+                  <span className="font-bold">{item}</span>
                 </motion.li>
               ))}
             </ul>
-            <div className="relative mt-8 hidden h-52 overflow-hidden rounded-3xl ring-1 ring-white/10 sm:block">
+            <div className="relative mt-8 hidden h-56 overflow-hidden rounded-4xl shadow-[10px_12px_0_0_rgba(255,214,10,0.35)] ring-4 ring-brand-yellow sm:block">
               <Img src={IMG.handshake} alt="Partnership agreement" className="h-full w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/80 to-transparent" />
-              <p className="absolute bottom-5 left-6 max-w-xs font-display text-2xl font-extrabold text-white">Terms are confirmed in writing.</p>
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/90 to-transparent" />
+              <p className="absolute bottom-6 left-6 max-w-xs font-display text-3xl font-extrabold text-brand-yellow">Terms are confirmed in writing.</p>
             </div>
           </div>
           <div>
-            <p className="eyebrow text-brand-yellow">Questions</p>
-            <h2 className="mt-4 text-4xl font-extrabold text-white">Franchise FAQs</h2>
-            <div className="mt-7 space-y-3">
+            <SectionTitle dark center={false} eyebrow="Questions" title="Franchise FAQs" />
+            <div className="mt-8 space-y-3">
               {FAQ.map(({ q, a }) => (
-                <details key={q} className="group rounded-3xl bg-white/[0.07] p-5 ring-1 ring-white/10 transition open:bg-white/10">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold text-white">
-                    <span className="flex items-center gap-3"><HelpCircle size={18} className="shrink-0 text-brand-yellow" />{q}</span>
-                    <span className="text-xl text-brand-yellow transition-transform group-open:rotate-45">+</span>
+                <details key={q} className="group rounded-3xl bg-white/10 p-5 ring-1 ring-white/15 transition open:bg-brand-yellow open:text-brand-dark">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-extrabold text-white group-open:text-brand-dark">
+                    <span className="flex items-center gap-3"><HelpCircle size={18} className="shrink-0 text-brand-yellow group-open:text-brand-dark" />{q}</span>
+                    <span className="text-2xl transition-transform group-open:rotate-45">+</span>
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-white/70">{a}</p>
+                  <p className="mt-3 text-sm font-medium leading-relaxed text-white/70 group-open:text-brand-dark/80">{a}</p>
                 </details>
               ))}
             </div>
@@ -536,27 +626,33 @@ export default function BecomeFranchise() {
         </div>
       </section>
 
-      {/* ---------- FINAL CTA ---------- */}
-      <section className="relative overflow-hidden px-4 py-24 text-center text-white sm:px-8">
-        <Img src={IMG.city} alt="City skyline" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/95 via-brand-dark/90 to-brand-green/80" />
-        <div className="relative">
-          <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-brand-yellow text-brand-dark shadow-lift">
-            <FileSignature size={32} />
-          </span>
-          <h2 className="mt-6 text-3xl font-extrabold sm:text-5xl">Ready to apply?</h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-white/75">
-            Complete the application, review the optional initial payment and save your Application ID to track progress.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button to="/franchise/register">Start application</Button>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white ring-1 ring-white/30 transition hover:bg-white/10"
-            >
-              Ask a question <ArrowRight size={16} />
-            </Link>
-          </div>
+      {/* ================= FINAL CTA (YELLOW) ================= */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-yellow to-brand-yellow-deep px-4 py-24 sm:px-8">
+        <div className="cds-dots pointer-events-none absolute inset-0" />
+        <div className="relative mx-auto max-w-4xl" style={{ perspective: '1200px' }}>
+          <Tilt max={5} className="relative overflow-hidden rounded-4xl bg-brand-dark p-10 text-center text-white shadow-[14px_16px_0_0_rgba(20,20,20,0.35)] sm:p-16">
+            <Img src={IMG.city} alt="City skyline" className="absolute inset-0 h-full w-full object-cover opacity-25" />
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-dark/80 to-brand-dark" />
+            <div className="relative">
+              <Float className="mx-auto w-fit">
+                <span className="grid h-20 w-20 place-items-center rounded-3xl bg-brand-yellow text-brand-dark shadow-[0_6px_0_0_rgba(255,255,255,0.2)]">
+                  <FileSignature size={36} />
+                </span>
+              </Float>
+              <h2 className="mt-7 text-4xl font-extrabold sm:text-6xl">Ready to <span className="text-brand-yellow">apply?</span></h2>
+              <p className="mx-auto mt-4 max-w-xl text-lg text-white/75">
+                Complete the application, review the optional initial payment and save your Application ID to track progress.
+              </p>
+              <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+                <Link to="/franchise/register" className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-yellow px-8 py-4 text-sm font-extrabold text-brand-dark shadow-[0_6px_0_0_rgba(255,255,255,0.25)] transition hover:-translate-y-0.5 active:translate-y-1 active:shadow-none">
+                  Start application <ArrowRight size={16} />
+                </Link>
+                <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-extrabold text-white ring-2 ring-white/40 transition hover:bg-white/10">
+                  Ask a question
+                </Link>
+              </div>
+            </div>
+          </Tilt>
         </div>
       </section>
     </>
