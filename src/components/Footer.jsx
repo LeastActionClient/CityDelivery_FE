@@ -92,8 +92,17 @@ export default function Footer() {
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">Explore</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
           <ul className="mt-5 space-y-3 text-white/75">
-            {[...NAV_LINKS.slice(1), { to: '/become-a-rider', label: 'Become a Rider' }, { to: '/request', label: 'Request a Service' }, { to: '/prohibited-items-policy', label: 'Prohibited Items Policy' }, { to: '/privacy', label: 'Privacy Policy' }, { to: '/terms', label: 'Terms and Conditions' }].map((l) => (
-              <li key={l.to}>
+            {[
+              ...NAV_LINKS.slice(1),
+              { to: '/become-a-rider', label: 'Become a Rider' },
+              { to: '/become-a-franchise', label: 'Become a Franchise Partner' },
+              { to: '/franchise/status', label: 'Franchise Application Status' },
+              { to: '/request', label: 'Request a Service' },
+              { to: '/prohibited-items-policy', label: 'Prohibited Items Policy' },
+              { to: '/privacy', label: 'Privacy Policy' },
+              { to: '/terms', label: 'Terms and Conditions' },
+            ].map((l) => (
+              <li key={`${l.to}-${l.label}`}>
                 <Link to={l.to} className="ft-link">{l.label}</Link>
               </li>
             ))}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, X, ArrowRight, Bike, ChevronDown, ShoppingBasket, Shirt, Smartphone, CookingPot, HeartPulse, BookOpen, Gift, Package } from 'lucide-react';
+import { Menu, X, ArrowRight, Bike, ChevronDown, ShoppingBasket, Shirt, Smartphone, CookingPot, HeartPulse, BookOpen, Gift, Package, Store } from 'lucide-react';
 import Logo from './Logo.jsx';
 import Button from './Button.jsx';
 import { NAV_LINKS } from '../utils/config.js';
@@ -51,6 +51,11 @@ export default function Navbar() {
       isActive ? 'ring-2 ring-brand-dark' : ''
     }`;
 
+  const franchiseCtaCls = ({ isActive }) =>
+    `hidden min-h-[40px] items-center gap-2 rounded-full bg-brand-dark px-5 text-sm font-extrabold text-white ring-1 ring-white/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-green md:inline-flex ${
+      isActive ? 'ring-2 ring-brand-yellow' : ''
+    }`;
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6">
       <div
@@ -82,6 +87,9 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <NavLink to="/become-a-rider" className={riderCtaCls}>
             <Bike size={16} /> Become a Rider
+          </NavLink>
+          <NavLink to="/become-a-franchise" className={franchiseCtaCls}>
+            <Store size={16} /> Franchise
           </NavLink>
           <div className="group relative hidden sm:block">
             <Button to="/request" size="sm" magnetic aria-haspopup="menu">
@@ -155,6 +163,16 @@ export default function Navbar() {
               }
             >
               <Bike size={18} /> Become a Rider <ArrowRight size={17} />
+            </NavLink>
+            <NavLink
+              to="/become-a-franchise"
+              className={({ isActive }) =>
+                `mt-2 flex min-h-[52px] items-center justify-center gap-2 rounded-2xl px-5 text-base font-extrabold ring-1 transition ${
+                  isActive ? 'bg-brand-yellow text-brand-dark ring-brand-yellow' : 'bg-white/10 text-white ring-white/20 hover:bg-white/15'
+                }`
+              }
+            >
+              <Store size={18} /> Become a Franchise Partner <ArrowRight size={17} />
             </NavLink>
             <Button to="/request" className="mt-2 w-full" size="lg">
               Request a Service <ArrowRight size={18} />

@@ -15,6 +15,9 @@ const GalleryDetail = lazy(() => import('./pages/GalleryDetail.jsx'));
 const BecomeRider = lazy(() => import('./pages/BecomeRider.jsx'));
 const RiderRegister = lazy(() => import('./pages/RiderRegister.jsx'));
 const RiderStatus = lazy(() => import('./pages/RiderStatus.jsx'));
+const BecomeFranchise = lazy(() => import('./pages/BecomeFranchise.jsx'));
+const FranchiseRegister = lazy(() => import('./pages/FranchiseRegister.jsx'));
+const FranchiseStatus = lazy(() => import('./pages/FranchiseStatus.jsx'));
 const Admin = lazy(() => import('./pages/Admin.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 
@@ -36,6 +39,9 @@ export default function App() {
           <Route path="become-a-rider" element={<BecomeRider />} />
           <Route path="rider/register" element={<RiderRegister />} />
           <Route path="rider/status" element={<RiderStatus />} />
+          <Route path="become-a-franchise" element={<BecomeFranchise />} />
+          <Route path="franchise/register" element={<FranchiseRegister />} />
+          <Route path="franchise/status" element={<FranchiseStatus />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

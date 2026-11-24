@@ -165,3 +165,123 @@ export function retryAdminRiderNotifications(apiKey, sensitiveKey, id) {
     headers: riderAdminHeaders(apiKey, sensitiveKey),
   });
 }
+
+function franchiseAdminHeaders(apiKey, role = 'owner', json = false) {
+  const headers = { 'x-api-key': apiKey, 'x-admin-role': role };
+  if (json) headers['Content-Type'] = 'application/json';
+  return headers;
+}
+
+export function getFranchiseConfig() {
+  return request('/franchises/config');
+}
+
+export function submitFranchiseApplication(formData) {
+  return request('/franchises/register', { method: 'POST', body: formData });
+}
+
+export function checkFranchiseStatus(applicationId) {
+  return request('/franchises/status', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ applicationId }),
+  });
+}
+
+export function createFranchisePaymentOrder(applicationId) {
+  return request('/franchises/payment/order', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ applicationId }),
+  });
+}
+
+export function verifyFranchisePayment(applicationId) {
+  return request('/franchises/payment/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ applicationId }),
+  });
+}
+
+export function getAdminFranchises(apiKey, role, { page = 1, status = '', city = '', payment = '', q = '' } = {}) {
+  const params = new URLSearchParams({ page: String(page), limit: '25' });
+  if (status) params.set('status', status);
+  if (city) params.set('city', city);
+  if (payment) params.set('payment', payment);
+  if (q) params.set('q', q);
+  return request(`/admin/franchises?${params.toString()}`, {
+    headers: franchiseAdminHeaders(apiKey, role),
+  });
+}
+
+export function getAdminFranchise(apiKey, role, id) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}`, {
+    headers: franchiseAdminHeaders(apiKey, role),
+  });
+}
+
+export function updateAdminFranchiseStatus(apiKey, role, id, payload) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}/status`, {
+    method: 'PATCH',
+    headers: franchiseAdminHeaders(apiKey, role, true),
+    body: JSON.stringify(payload),
+  });
+}
+
+export function markAdminFranchiseFeePaid(apiKey, role, id, payload = {}) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}/mark-paid`, {
+    method: 'PATCH',
+    headers: franchiseAdminHeaders(apiKey, role, true),
+    body: JSON.stringify(payload),
+  });
+}
+
+export function requestAdminFranchiseInfo(apiKey, role, id, message) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}/request-info`, {
+    method: 'PATCH',
+    headers: franchiseAdminHeaders(apiKey, role, true),
+    body: JSON.stringify({ message }),
+  });
+}
+
+export function addAdminFranchiseNote(apiKey, role, id, text) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}/notes`, {
+    method: 'POST',
+    headers: franchiseAdminHeaders(apiKey, role, true),
+    body: JSON.stringify({ text }),
+  });
+}
+
+export function getAdminFranchiseDocuments(apiKey, role, id) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}/documents`, {
+    headers: franchiseAdminHeaders(apiKey, role),
+  });
+}
+
+export function getAdminFranchiseAudit(apiKey, role, id) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}/audit`, {
+    headers: franchiseAdminHeaders(apiKey, role),
+  });
+}
+
+export function getAdminFranchiseSettings(apiKey, role = 'owner') {
+  return request('/admin/franchises/settings', {
+    headers: franchiseAdminHeaders(apiKey, role),
+  });
+}
+
+export function updateAdminFranchiseSettings(apiKey, role, payload) {
+  return request('/admin/franchises/settings', {
+    method: 'PATCH',
+    headers: franchiseAdminHeaders(apiKey, role, true),
+    body: JSON.stringify(payload),
+  });
+}
+
+export function retryAdminFranchiseNotifications(apiKey, role, id) {
+  return request(`/admin/franchises/${encodeURIComponent(id)}/retry-notifications`, {
+    method: 'POST',
+    headers: franchiseAdminHeaders(apiKey, role),
+  });
+}

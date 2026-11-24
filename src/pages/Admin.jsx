@@ -22,6 +22,7 @@ import { ApiError, getAdminRequests, updateAdminRequestStatus } from '../service
 import responsiveHeroBackground from '../assets/resposiveImage.png';
 import SEO from '../components/SEO.jsx';
 import RiderManagement from '../components/admin/RiderManagement.jsx';
+import FranchiseManagement from '../components/admin/FranchiseManagement.jsx';
 
 const STORAGE_KEY = 'city-delivery-admin-api-key';
 const STATUSES = ['Pending', 'Reviewing', 'Contacted', 'Completed', 'Cancelled'];
@@ -285,8 +286,14 @@ export default function Admin() {
         <header className="flex flex-col gap-5 rounded-4xl bg-brand-dark p-6 text-white shadow-lift sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
             <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-brand-yellow">City Delivery Services</p>
-            <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{tab === 'riders' ? 'Admin dashboard' : 'Customer requests'}</h1>
-            <p className="mt-2 text-white/65">{tab === 'riders' ? 'Review rider applications and onboarding' : `${total} submitted request${total === 1 ? '' : 's'}`}</p>
+            <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">{tab === 'requests' ? 'Customer requests' : 'Admin dashboard'}</h1>
+            <p className="mt-2 text-white/65">
+              {tab === 'riders'
+                ? 'Review rider applications and onboarding'
+                : tab === 'franchises'
+                  ? 'Review franchise applications, payments and onboarding'
+                  : `${total} submitted request${total === 1 ? '' : 's'}`}
+            </p>
           </div>
           <div className="flex gap-2">
             <button type="button" onClick={() => loadRequests()} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-bold transition hover:bg-white/20" disabled={loading}>
@@ -305,9 +312,17 @@ export default function Admin() {
           <button type="button" onClick={() => setTab('riders')} className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition ${tab === 'riders' ? 'bg-brand-dark text-brand-yellow' : 'text-brand-muted hover:bg-brand-light'}`}>
             Rider applications
           </button>
+          <button type="button" onClick={() => setTab('franchises')} className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition ${tab === 'franchises' ? 'bg-brand-dark text-brand-yellow' : 'text-brand-muted hover:bg-brand-light'}`}>
+            Franchise applications
+          </button>
         </div>
 
-        {tab === 'riders' ? (
+        {tab === 'franchises' ? (
+          <FranchiseManagement
+            apiKey={apiKey}
+            onUnauthorized={() => { clearKey(); setApiKey(''); setLoginError('That admin key was not accepted.'); }}
+          />
+        ) : tab === 'riders' ? (
           <RiderManagement
             apiKey={apiKey}
             onUnauthorized={() => { clearKey(); setApiKey(''); setLoginError('That admin key was not accepted.'); }}
