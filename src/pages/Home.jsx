@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ClipboardList, Store, Send, BellRing, PhoneCall, MousePointerClick, ShieldCheck, Zap, HeartHandshake, Truck, Play, Bike, Star, Quote, Check } from 'lucide-react';
+import { ArrowRight, ClipboardList, Store, Send, BellRing, PhoneCall, MousePointerClick, ShieldCheck, Zap, HeartHandshake, Truck, Play, Bike, Star, Quote, Check, FileText } from 'lucide-react';
 import Button from '../components/Button.jsx';
 import FloatingShapes from '../components/FloatingShapes.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
@@ -69,6 +69,7 @@ const MARQUEE_ITEMS = [
   { icon: Store, text: 'Groceries & Daily Needs' },
   { icon: HeartHandshake, text: 'Medicines & Health' },
   { icon: Send, text: 'Gifts & Surprises' },
+  { icon: FileText, text: 'Documents Delivery' },
   { icon: Bike, text: 'Shoes & Fashion' },
   { icon: Zap, text: 'Electronics & Gadgets' },
   { icon: ShieldCheck, text: 'Any Store, Any Product' },
@@ -165,7 +166,7 @@ function Hero() {
         <div className="hv-bob">
           <motion.img
             src={heroVisual}
-            alt="City Delivery Services courier on a yellow scooter with groceries, headphones, shoes, medicine and gifts"
+            alt="City Delivery Services courier on a yellow scooter with groceries, headphones, shoes, medicine, gifts and documents"
             draggable="false"
             fetchpriority="high"
             decoding="async"
@@ -198,6 +199,14 @@ function Hero() {
           <span className="text-left">
             <span className="block text-sm font-extrabold text-[#16161A]">Gifts &amp; surprises</span>
             <span className="block text-[11px] font-medium text-[#7a7a73]">Delivered with a smile</span>
+          </span>
+        </div>
+
+        <div className="hv-chip pointer-events-none absolute bottom-[10%] right-[5%] hidden items-center gap-3 rounded-2xl border border-white/80 bg-white/90 px-4 py-3 shadow-[0_18px_35px_-12px_rgba(60,50,0,.35)] backdrop-blur-md lg:flex" style={{ '--z': '85px', '--d': '-4.5s' }}>
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#FFF3C4] text-[#8a6400]"><FileText className="h-5 w-5" /></span>
+          <span className="text-left">
+            <span className="block text-sm font-extrabold text-[#16161A]">Documents delivery</span>
+            <span className="block text-[11px] font-medium text-[#7a7a73]">Handled with care</span>
           </span>
         </div>
       </div>
@@ -280,6 +289,7 @@ function Hero() {
             { icon: Store, label: 'Groceries', delay: '-.4s' },
             { icon: HeartHandshake, label: 'Medicines', delay: '-1.6s' },
             { icon: Send, label: 'Gifts', delay: '-2.8s' },
+            { icon: FileText, label: 'Documents', delay: '-4s' },
           ].map(({ icon: Icon, label, delay }) => (
             <span
               key={label}

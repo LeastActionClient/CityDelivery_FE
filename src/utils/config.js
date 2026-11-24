@@ -24,6 +24,7 @@ export const CATEGORIES = [
   'Health & Beauty',
   'Books & Stationery',
   'Gifts',
+  'Documents',
   'Other',
 ];
 
