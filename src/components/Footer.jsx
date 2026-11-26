@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, MessageCircle, Arrow
 import Button from './Button.jsx';
 import { SITE, NAV_LINKS } from '../utils/config.js';
 import logo2 from '../assets/Logo2.png';
+import playBadge from '../assets/google-play-badge.svg';
 
 const SOCIAL_ICONS = { Instagram, Facebook, X: Twitter, WhatsApp: MessageCircle };
 
@@ -78,6 +79,13 @@ export default function Footer() {
           >
             Request a Service <ArrowRight size={18} strokeWidth={2.6} />
           </Link>
+          <img
+            src={playBadge}
+            alt="Get it on Google Play"
+            className="mt-6 h-14 w-auto max-w-full object-contain"
+            loading="lazy"
+            decoding="async"
+          />
         </motion.div>
 
         {/* explore */}
@@ -98,6 +106,8 @@ export default function Footer() {
               { to: '/become-a-franchise', label: 'Become a Franchise Partner' },
               { to: '/franchise/status', label: 'Franchise Application Status' },
               { to: '/request', label: 'Request a Service' },
+              { to: '/request/status', label: 'Request Status' },
+              { to: '/request/history', label: 'My Requests' },
               { to: '/prohibited-items-policy', label: 'Prohibited Items Policy' },
               { to: '/privacy', label: 'Privacy Policy' },
               { to: '/terms', label: 'Terms and Conditions' },

@@ -56,6 +56,14 @@ export function getRequestStatus(requestId) {
   return request(`/requests/${encodeURIComponent(requestId)}/status`);
 }
 
+export function getRequestStatuses(requestIds) {
+  return request('/requests/status/bulk', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ requestIds }),
+  });
+}
+
 export function getAdminRequests(apiKey, { page = 1, status = '' } = {}) {
   const params = new URLSearchParams({ page: String(page), limit: '25' });
   if (status) params.set('status', status);

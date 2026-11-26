@@ -5,6 +5,8 @@ import PageLoader from './components/PageLoader.jsx';
 
 const Home = lazy(() => import('./pages/Home.jsx'));
 const RequestProduct = lazy(() => import('./pages/RequestProduct.jsx'));
+const RequestStatus = lazy(() => import('./pages/RequestStatus.jsx'));
+const RequestHistory = lazy(() => import('./pages/RequestHistory.jsx'));
 const HowItWorks = lazy(() => import('./pages/HowItWorks.jsx'));
 const About = lazy(() => import('./pages/About.jsx'));
 const Contact = lazy(() => import('./pages/Contact.jsx'));
@@ -29,6 +31,8 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="request" element={<RequestProduct />} />
+          <Route path="request/status" element={<RequestStatus />} />
+          <Route path="request/history" element={<RequestHistory />} />
           <Route path="how-it-works" element={<HowItWorks />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />

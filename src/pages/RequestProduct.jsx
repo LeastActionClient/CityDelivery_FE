@@ -11,6 +11,7 @@ import Button from '../components/Button.jsx';
 import { Reveal } from '../components/Reveal.jsx';
 import { submitProductRequest, ApiError } from '../services/api.js';
 import { CATEGORIES } from '../utils/config.js';
+import { rememberRequest } from '../utils/requestHistory.js';
 
 const INITIAL = {
   customerName: '', email: '', phone: '',
@@ -118,7 +119,9 @@ function Success({ result, onReset }) {
       )}
 
       <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-        <Button onClick={onReset}>Submit another request</Button>
+        <Button to={`/request/status?requestId=${encodeURIComponent(result.requestId)}`}>Check request status</Button>
+        <Button to="/request/history" variant="outline">My requests</Button>
+        <Button onClick={onReset} variant="outline">Submit another request</Button>
         <Button to="/" variant="outline">Back to home</Button>
       </div>
     </motion.div>
@@ -188,6 +191,7 @@ export default function RequestProduct() {
     setSubmitting(true);
     try {
       const res = await submitProductRequest(fd);
+      rememberRequest(res.data?.requestId);
       setResult({ ...res.data, message: res.message });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {

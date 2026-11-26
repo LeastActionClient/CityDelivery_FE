@@ -10,8 +10,10 @@ import {
   FileText,
   Gift,
   HeartPulse,
+  History,
   Menu,
   Package,
+  Search,
   ShoppingBasket,
   Shirt,
   Smartphone,
@@ -145,6 +147,20 @@ export default function Navbar() {
                   </span>
                   <ArrowRight size={17} className="text-brand-yellow transition-transform group-hover/item:translate-x-1" />
                 </NavLink>
+                <NavLink
+                  to="/request/status"
+                  role="menuitem"
+                  className="mt-2 flex items-center gap-3 rounded-2xl bg-brand-light px-4 py-3 text-sm font-bold text-brand-dark ring-1 ring-brand-dark/5 transition hover:bg-brand-yellow"
+                >
+                  <Search size={18} /> Check request status
+                </NavLink>
+                <NavLink
+                  to="/request/history"
+                  role="menuitem"
+                  className="mt-2 flex items-center gap-3 rounded-2xl bg-brand-light px-4 py-3 text-sm font-bold text-brand-dark ring-1 ring-brand-dark/5 transition hover:bg-brand-yellow"
+                >
+                  <History size={18} /> My requests
+                </NavLink>
 
                 <p className="px-2 pb-2 pt-4 text-[11px] font-extrabold uppercase tracking-[0.16em] text-brand-muted">Request by service</p>
                 <div className="grid grid-cols-2 gap-2">
@@ -242,6 +258,28 @@ export default function Navbar() {
               <Button to="/request" className="w-full" size="lg">
                 Request a Service <ArrowRight size={18} />
               </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <NavLink
+                  to="/request/status"
+                  className={({ isActive }) =>
+                    `flex min-h-[50px] items-center justify-center gap-2 rounded-2xl px-3 text-sm font-extrabold transition ${
+                      isActive ? 'bg-brand-yellow text-brand-dark' : 'bg-white/10 text-white ring-1 ring-white/15 hover:bg-white/15'
+                    }`
+                  }
+                >
+                  <Search size={17} /> Request Status
+                </NavLink>
+                <NavLink
+                  to="/request/history"
+                  className={({ isActive }) =>
+                    `flex min-h-[50px] items-center justify-center gap-2 rounded-2xl px-3 text-sm font-extrabold transition ${
+                      isActive ? 'bg-brand-yellow text-brand-dark' : 'bg-white/10 text-white ring-1 ring-white/15 hover:bg-white/15'
+                    }`
+                  }
+                >
+                  <History size={17} /> My Requests
+                </NavLink>
+              </div>
             </div>
 
             <div className="relative mt-4 rounded-3xl bg-white/5 p-3 ring-1 ring-white/10">

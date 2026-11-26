@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="74" viewBox="0 0 250 74" role="img" aria-labelledby="title desc">
+  <title id="title">Get it on Google Play</title>
+  <desc id="desc">Google Play app download badge</desc>
+  <defs>
+    <linearGradient id="play" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00C3FF"/>
+      <stop offset="0.5" stop-color="#34A853"/>
+      <stop offset="1" stop-color="#EA4335"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="248" height="72" rx="9" fill="#111114" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="2"/>
+  <path d="M14 13.5 43 29.7 14 46Z" fill="url(#play)"/>
+  <path d="M14 13.5 30.8 23 14 31.8Z" fill="#00C3FF" fill-opacity="0.75"/>
+  <text x="55" y="28" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="1.6">GET IT ON</text>
+  <text x="54" y="53" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="600">Google Play</text>
+</svg>
