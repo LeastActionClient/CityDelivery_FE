@@ -186,7 +186,7 @@ function Hero() {
           </span>
         </div>
 
-        <div className="hv-chip pointer-events-none absolute right-[1%] top-[40%] hidden items-center gap-3 rounded-2xl border border-white/80 bg-white/90 px-4 py-3 shadow-[0_18px_35px_-12px_rgba(60,50,0,.35)] backdrop-blur-md lg:flex" style={{ '--z': '100px', '--d': '-2s' }}>
+        <div className="hv-chip pointer-events-none absolute right-[9%] top-[36%] hidden items-center gap-3 rounded-2xl border border-white/80 bg-white/90 px-4 py-3 shadow-[0_18px_35px_-12px_rgba(60,50,0,.35)] backdrop-blur-md lg:flex" style={{ '--z': '100px', '--d': '-2s' }}>
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#FFF3C4] text-[#8a6400]"><HeartHandshake className="h-5 w-5" /></span>
           <span className="text-left">
             <span className="block text-sm font-extrabold text-[#16161A]">Medicines &amp; health</span>

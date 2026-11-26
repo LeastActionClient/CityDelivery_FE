@@ -11,7 +11,7 @@ const CAPTIONS = [
   { title: 'Gifts & surprises', text: 'Delivered with a smile' },
   { title: 'Shoes & fashion', text: 'Any store, any product' },
   { title: 'Electronics & gadgets', text: 'Handled with care' },
-  { title: 'Friendly couriers', text: 'Real people, real support' },
+  { title: 'Documents & related info', text: 'Handed over with care' },
   { title: 'On time, every time', text: "We'll keep you posted" },
 ];
 
@@ -105,14 +105,14 @@ const DETAILS = [
     ],
   },
   {
-    slug: 'friendly-couriers',
-    category: 'Our team',
-    description: 'Every request is handled by people, not a button. You receive a confirmation, a Request ID and a direct follow-up so you always know who is working on it.',
+    slug: 'documents-related-info',
+    category: 'Documents',
+    description: 'Share the document or packet details, the pickup store or office, and where it needs to go. Our team reviews the request and confirms what is accepted before anything is arranged.',
     highlights: [
-      'A unique ID is issued for every request',
-      'A confirmation email is sent after submission',
-      'A real team member contacts you with next steps',
-      'Questions can be sent through the Contact page',
+      'Tell us the document type and pickup location',
+      'Add clear handover instructions in your request',
+      'We confirm eligibility and next steps with you first',
+      'Keep your Request ID for every update',
     ],
   },
   {
