@@ -10,8 +10,27 @@ import playBadge from '../assets/Googleplaystore.png';
 
 const SOCIAL_ICONS = { Instagram, Facebook, X: Twitter, WhatsApp: MessageCircle };
 
+function formatAddressChunks(address) {
+  const clean = String(address || '').trim();
+  const emDashIndex = clean.indexOf(' — ');
+  const main = emDashIndex >= 0 ? clean.slice(0, emDashIndex) : clean;
+  const note = emDashIndex >= 0 ? clean.slice(emDashIndex + 1) : '';
+  const parts = main.split(',').map((part) => part.trim()).filter(Boolean);
+
+  if (parts.length <= 2) return [clean];
+
+  const chunks = [
+    `${parts.slice(0, 2).join(', ')},`,
+    `${parts[2]},`,
+    parts.slice(3).join(', '),
+  ];
+  if (note) chunks.push(note);
+  return chunks.filter(Boolean);
+}
+
 export default function Footer() {
   const socials = Object.entries(SITE.social).filter(([, url]) => url);
+  const addressChunks = formatAddressChunks(SITE.address);
   const [serviceCity, setServiceCity] = useState(SITE.serviceCity);
 
   useEffect(() => {
@@ -73,7 +92,7 @@ export default function Footer() {
       <span className="ft-orb pointer-events-none absolute -top-32 right-0 h-80 w-80 rounded-full bg-[#FFC928]/15 blur-3xl" aria-hidden="true" />
       <span className="ft-orb pointer-events-none absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#0F8A2F]/25 blur-3xl" style={{ animationDelay: '-5s' }} aria-hidden="true" />
 
-      <div className="container-x relative grid grid-cols-12 gap-12 py-16" style={{ perspective: '1200px' }}>
+      <div className="container-x relative grid grid-cols-1 gap-10 py-16 sm:grid-cols-12 sm:gap-12" style={{ perspective: '1200px' }}>
         {/* brand */}
         <motion.div
           initial={{ opacity: 0, y: 50, rotateX: -25 }}
@@ -81,7 +100,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14 }}
           style={{ transformPerspective: 1000 }}
-          className="col-span-12 min-w-0 md:col-span-4"
+          className="col-span-1 min-w-0 sm:col-span-12 md:col-span-4"
         >
           <Link to="/" className="group inline-flex" aria-label="City Delivery Services — home">
             <img src={logo2} alt="City Delivery Services" className="h-28 w-auto max-w-full rounded-2xl object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-32" />
@@ -112,7 +131,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.12 }}
           style={{ transformPerspective: 1000 }}
-          className="col-span-12 min-w-0 sm:col-span-6 md:col-span-3"
+          className="col-span-1 min-w-0 sm:col-span-6 md:col-span-3"
         >
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">Explore</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
@@ -148,7 +167,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.18 }}
           style={{ transformPerspective: 1000 }}
-          className="col-span-12 min-w-0 sm:col-span-6 md:col-span-2"
+          className="col-span-1 min-w-0 sm:col-span-6 md:col-span-2"
         >
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">City where we serve</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
@@ -165,7 +184,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.24 }}
           style={{ transformPerspective: 1000 }}
-          className="col-span-12 min-w-0 max-w-full overflow-hidden md:col-span-3 md:overflow-visible"
+          className="col-span-1 min-w-0 max-w-full sm:col-span-12 md:col-span-3"
         >
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">Get in touch</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
@@ -187,10 +206,10 @@ export default function Footer() {
                 <span className="ft-ico grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#2c2c34] to-[#111115] text-[#FFC928]" style={{ animationDelay: '-2.4s', boxShadow: '0 4px 0 #050507,inset 0 1px 0 rgba(255,255,255,.18)' }}><MapPin size={18} /></span>
                 <p
                   className="w-full min-w-0 whitespace-normal pt-1.5 text-sm leading-relaxed sm:text-base"
-                  style={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}
+                  style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}
                 >
-                  {SITE.address.split(/([,—])/).map((part, index) => (
-                    <span key={index}>{part}<wbr /></span>
+                  {addressChunks.map((chunk, index) => (
+                    <span key={index} className="block sm:inline">{chunk}{index < addressChunks.length - 1 ? ' ' : ''}</span>
                   ))}
                 </p>
               </li>

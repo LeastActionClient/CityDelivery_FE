@@ -144,7 +144,7 @@ export default function RequestHistory() {
         noindex
       />
 
-      <section className="relative isolate overflow-hidden bg-brand-dark pb-28 pt-36 text-white sm:pt-44">
+      <section className="relative isolate overflow-hidden bg-brand-dark pb-28 pt-36 mt-40 text-white sm:pt-44">
         <div aria-hidden="true" className="absolute -left-24 top-10 h-80 w-80 rounded-full bg-brand-green/30 blur-3xl" />
         <div aria-hidden="true" className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-brand-yellow/20 blur-3xl" />
         <div aria-hidden="true" className="absolute left-1/2 top-1/3 h-40 w-40 rounded-full bg-white/5 blur-2xl" />
