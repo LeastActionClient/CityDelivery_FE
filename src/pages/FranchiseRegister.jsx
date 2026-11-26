@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AlertCircle, CheckCircle2, CreditCard, Loader2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
 import SEO from '../components/SEO.jsx';
 import Field from '../components/form/Field.jsx';
-import { ApiError, createFranchisePaymentOrder, getFranchiseConfig, submitFranchiseApplication } from '../services/api.js';
+import { ApiError, getFranchiseConfig, submitFranchiseApplication } from '../services/api.js';
 import {
   FRANCHISE_DOCUMENTS,
   FRANCHISE_INVESTMENT_CAPACITIES,
@@ -13,7 +13,6 @@ import {
   franchiseFieldError,
   vehicleRowsFromCounts,
 } from '../utils/franchise.js';
-import { openCashfreeCheckout } from '../utils/cashfree.js';
 
 function newSubmissionKey() {
   const random = typeof crypto !== 'undefined' && crypto.randomUUID
@@ -61,11 +60,9 @@ export default function FranchiseRegister() {
   const [files, setFiles] = useState({});
   const [config, setConfig] = useState(null);
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const [busy, setBusy] = useState(false);
-  const [paying, setPaying] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -86,30 +83,6 @@ export default function FranchiseRegister() {
 
   const setVehicleCount = (type, value) => {
     setVehicleCounts((current) => ({ ...current, [type]: value }));
-  };
-
-  const startPayment = async (applicationId) => {
-    setPaying(true);
-    setError('');
-    try {
-      const response = await createFranchisePaymentOrder(applicationId);
-      if (response.data?.alreadyPaid) {
-        setMessage('Payment has already been recorded for this application. Your latest status is available on the status page.');
-        return;
-      }
-      if (response.data?.paymentSessionId) {
-        await openCashfreeCheckout({
-          paymentSessionId: response.data.paymentSessionId,
-          environment: response.data.environment,
-        });
-        return;
-      }
-      setMessage('Your application was saved. The payment provider did not return a session — please use the status page to retry payment.');
-    } catch (err) {
-      setMessage(`Your application was saved (${applicationId}). Payment could not start right now: ${err.message || 'please try again from the status page.'}`);
-    } finally {
-      setPaying(false);
-    }
   };
 
   const submit = async (event) => {
@@ -163,16 +136,10 @@ export default function FranchiseRegister() {
             <h2 className="mt-5 text-2xl font-extrabold text-brand-dark">Save your Application ID</h2>
             <p className="mt-2 font-mono text-xl font-extrabold text-brand-dark">{result.applicationId}</p>
             <p className="mt-5 leading-relaxed text-brand-muted">{result.message}</p>
-            {message && <p className="mt-4 rounded-2xl bg-amber-50 p-4 text-sm font-semibold text-amber-900">{message}</p>}
-            {result.paymentConfigured && result.payment?.status !== 'PAID' && (
-              <div className="mt-6 rounded-2xl bg-brand-light/70 p-4">
-                <p className="text-sm font-semibold text-brand-muted">Initial payment is optional. You can pay now or later from the status page.</p>
-                <button type="button" onClick={() => startPayment(result.applicationId)} disabled={paying} className="btn mt-4 inline-flex items-center justify-center gap-2">
-                  <CreditCard size={17} /> Pay initial payment (optional)
-                </button>
-              </div>
-            )}
-            {paying && <p className="mt-4 flex items-center gap-2 text-sm font-bold text-brand-muted"><Loader2 size={17} className="animate-spin" /> Opening secure checkout…</p>}
+            <div className="mt-6 rounded-2xl bg-brand-light/70 p-4">
+              <p className="text-sm font-semibold text-brand-muted">Initial payment is optional. Our team will share the simple payment steps after you apply.</p>
+              <p className="mt-2 text-xs font-semibold text-brand-muted">Save your Application ID and use the status page to check payment status.</p>
+            </div>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link to={`/franchise/status?applicationId=${encodeURIComponent(result.applicationId)}`} className="btn inline-flex items-center justify-center gap-2">
                 Check application status
@@ -198,7 +165,7 @@ export default function FranchiseRegister() {
       <PageHero
         eyebrow="Franchise application"
         title="Become a franchise partner"
-        description="Share your details and proposed operating area. You will see the fee policy before payment."
+        description="Share your details and proposed operating area. Review the optional fee and refund policy before applying."
       />
 
       <main className="bg-brand-light px-4 pb-24 sm:px-8">
@@ -340,12 +307,12 @@ export default function FranchiseRegister() {
             </label>
             {franchiseFieldError(errors, 'consents.contact') && <p role="alert" className="mt-2 text-sm font-semibold text-red-600">{franchiseFieldError(errors, 'consents.contact')}</p>}
 
-            <button type="submit" disabled={busy || paying} className="btn mt-7 inline-flex w-full items-center justify-center gap-2">
-              {busy || paying ? <Loader2 size={18} className="animate-spin" /> : <CreditCard size={18} />}
-              {busy ? 'Submitting…' : paying ? 'Opening payment…' : 'Submit application'}
+            <button type="submit" disabled={busy} className="btn mt-7 inline-flex w-full items-center justify-center gap-2">
+              {busy && <Loader2 size={18} className="animate-spin" />}
+              {busy ? 'Submitting…' : 'Submit application'}
             </button>
             <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-brand-muted">
-              <AlertCircle size={16} className="mt-0.5 shrink-0" /> You will see the fee and refund policy above before payment. No card or bank details are stored on this website.
+              <AlertCircle size={16} className="mt-0.5 shrink-0" /> The initial payment is optional and handled separately. No card or bank details are stored on this website.
             </p>
           </section>
         </form>

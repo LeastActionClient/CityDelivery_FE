@@ -188,22 +188,6 @@ export function checkFranchiseStatus(applicationId) {
   });
 }
 
-export function createFranchisePaymentOrder(applicationId) {
-  return request('/franchises/payment/order', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ applicationId }),
-  });
-}
-
-export function verifyFranchisePayment(applicationId) {
-  return request('/franchises/payment/verify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ applicationId }),
-  });
-}
-
 export function getAdminFranchises(apiKey, role, { page = 1, status = '', city = '', payment = '', q = '' } = {}) {
   const params = new URLSearchParams({ page: String(page), limit: '25' });
   if (status) params.set('status', status);

@@ -489,13 +489,8 @@ export default function FranchiseManagement({ apiKey, onUnauthorized }) {
               </div>
               <div className="mt-3 grid gap-3 text-sm text-brand-text sm:grid-cols-2">
                 <span>Amount: {formatCurrency(detail.payment?.amount || detail.feeSnapshot?.amount, detail.payment?.currency || detail.feeSnapshot?.currency)}</span>
-                <span>Provider: {dash(detail.payment?.provider || 'Cashfree')}</span>
-                <span>Order: {dash(detail.payment?.orderId)}</span>
-                <span>Cashfree order: {dash(detail.payment?.cfOrderId)}</span>
-                <span>Transaction: {dash(detail.payment?.transactionId)}</span>
-                <span>Method: {dash(detail.payment?.paymentMethod)}</span>
+                <span>Reference: {dash(detail.payment?.transactionId)}</span>
                 <span>Paid: {formatDate(detail.payment?.paidAt)}</span>
-                <span>Attempts: {dash(detail.payment?.attempts)}</span>
               </div>
               {detail.payment?.lastError && <p className="mt-3 rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-700">{detail.payment.lastError}</p>}
               {detail.payment?.status !== 'PAID' && canWrite && (

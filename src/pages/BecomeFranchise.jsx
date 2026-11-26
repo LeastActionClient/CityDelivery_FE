@@ -75,7 +75,7 @@ const FAQ = [
   },
   {
     q: 'Can I pay after submitting the application?',
-    a: 'Yes. The initial payment is optional. Save your Application ID and use the status page to pay any time that suits you. Your application stays under review.',
+    a: 'Yes. The initial payment is optional. Save your Application ID and contact our team for the simple payment steps. Your application stays under review.',
   },
   {
     q: 'What happens after I apply?',
@@ -472,9 +472,9 @@ export default function BecomeFranchise() {
         <div className="pointer-events-none absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-brand-yellow/25 blur-3xl" />
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <SectionTitle center={false} eyebrow="Flexible initial payment" title="Apply first. Pay when you are ready." text="The initial payment is optional. Submit your application, save your Application ID and return to the status page whenever you want to complete the payment." />
+            <SectionTitle center={false} eyebrow="Flexible initial payment" title="Apply first. Pay when you are ready." text="The initial payment is optional. After you apply, our team will share the simple payment steps. Your Application ID is used to check your status." />
             <div className="mt-8 space-y-3">
-              {['Submit your franchise application', 'Save the Application ID shown afterwards', 'Open the status page and pay any time'].map((step, index) => (
+              {['Submit your franchise application', 'Save the Application ID shown afterwards', 'Contact us for the simple payment steps'].map((step, index) => (
                 <motion.div
                   key={step}
                   initial={{ opacity: 0, x: 50 }}
@@ -507,8 +507,8 @@ export default function BecomeFranchise() {
                   <p className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-white/55 sm:text-sm">Optional initial payment</p>
                   <div className="mt-7 space-y-5 border-t border-white/15 pt-7">
                     {[
-                      { icon: Clock3, title: 'Pay now or later', text: 'Your Application ID unlocks the payment option on the status page.' },
-                      { icon: ShieldCheck, title: 'Secure payment flow', text: 'Payment is handled by the payment provider when online payment is enabled.' },
+                      { icon: Clock3, title: 'Pay when ready', text: 'Our team shares simple payment steps after you apply.' },
+                      { icon: ClipboardCheck, title: 'Easy tracking', text: 'Use your Application ID on the status page to check payment status.' },
                       { icon: CheckCircle2, title: 'Review continues', text: 'Your application remains under review whether or not you pay.' },
                     ].map(({ icon: Icon, title, text }) => (
                       <div key={title} className="flex gap-4">
