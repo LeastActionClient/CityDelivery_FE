@@ -101,12 +101,6 @@ const REVIEW_POINTS = [
   { icon: ClipboardCheck, img: IMG.office, title: 'Business readiness', text: 'Your experience, investment capacity and optional supporting documents.' },
 ];
 
-const WHO_CAN_APPLY = [
-  { img: IMG.shop, title: 'Local shop or office owners', text: 'You have a base to coordinate deliveries and communicate with customers.' },
-  { img: IMG.team, title: 'Delivery operations teams', text: 'You can arrange vehicles, riders and day-to-day local delivery processes.' },
-  { img: IMG.map, title: 'Area-focused operators', text: 'You understand your locality and want to grow delivery coverage in it.' },
-];
-
 const STEPS = [
   { n: '01', icon: FileSignature, title: 'Apply', text: 'Share your details, location and operating capacity.' },
   { n: '02', icon: Wallet, title: 'Initial payment', text: null },
@@ -524,29 +518,6 @@ export default function BecomeFranchise() {
               </Tilt>
             </div>
           </Reveal>
-        </div>
-      </section>
-
-      {/* ================= WHO CAN APPLY (WHITE) ================= */}
-      <section className="relative overflow-hidden bg-white px-4 py-16 sm:px-8 sm:py-24">
-        <div className="cds-dots pointer-events-none absolute inset-0" />
-        <div className="relative mx-auto max-w-6xl">
-          <SectionTitle eyebrow="Who can apply" title="Local operators with a clear plan" text="If you can support local delivery coordination in a defined area, we would like to review your application. Terms are confirmed only after review and in writing." />
-          <div className="mt-12 grid gap-6 md:grid-cols-3 lg:gap-8" style={{ perspective: '1200px' }}>
-            {WHO_CAN_APPLY.map(({ img, title, text }, index) => (
-              <motion.div key={title} initial={{ opacity: 0, x: 60 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.12 }}>
-                <Tilt className="group relative h-80 overflow-hidden rounded-3xl text-left shadow-lift ring-1 ring-brand-dark/10 sm:h-96">
-                  <Img src={img} alt={title} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/35 to-transparent" />
-                  <span className="absolute left-4 top-4 grid h-11 w-11 place-items-center rounded-2xl bg-brand-yellow text-brand-dark shadow-soft" style={{ transform: 'translateZ(30px)' }}><BadgeCheck size={22} /></span>
-                  <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6" style={{ transform: 'translateZ(18px)' }}>
-                    <h3 className="text-xl font-extrabold text-white sm:text-2xl">{title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/80">{text}</p>
-                  </div>
-                </Tilt>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
