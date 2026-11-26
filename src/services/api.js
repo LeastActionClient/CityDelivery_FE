@@ -91,6 +91,10 @@ export function getRiderConfig() {
   return request('/riders/config');
 }
 
+export function getSiteConfig() {
+  return request('/site/config');
+}
+
 export function submitRiderApplication(formData) {
   return request('/riders/register', { method: 'POST', body: formData });
 }
@@ -157,6 +161,18 @@ export function getAdminRiderAudit(apiKey, sensitiveKey, id) {
 
 export function getAdminRiderSettings(apiKey) {
   return request('/admin/riders/settings', { headers: { 'x-api-key': apiKey } });
+}
+
+export function getAdminSiteSettings(apiKey) {
+  return request('/admin/site/settings', { headers: { 'x-api-key': apiKey } });
+}
+
+export function updateAdminSiteSettings(apiKey, serviceCity) {
+  return request('/admin/site/settings', {
+    method: 'PATCH',
+    headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serviceCity }),
+  });
 }
 
 export function updateAdminRiderSettings(apiKey, payload) {

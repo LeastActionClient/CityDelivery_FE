@@ -89,7 +89,6 @@ export default function FranchiseRegister() {
     event.preventDefault();
     setBusy(true);
     setError('');
-    setMessage('');
     setErrors({});
     try {
       if (Number(vehicleCounts.Other) > 0 && !otherVehicle.trim()) {

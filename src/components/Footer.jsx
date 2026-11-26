@@ -1,15 +1,31 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, MessageCircle, ArrowRight } from 'lucide-react';
 import Button from './Button.jsx';
+import { getSiteConfig } from '../services/api.js';
 import { SITE, NAV_LINKS } from '../utils/config.js';
 import logo2 from '../assets/Logo2.png';
-import playBadge from '../assets/google-play-badge.svg';
+import playBadge from '../assets/Googleplaystore.png';
 
 const SOCIAL_ICONS = { Instagram, Facebook, X: Twitter, WhatsApp: MessageCircle };
 
 export default function Footer() {
   const socials = Object.entries(SITE.social).filter(([, url]) => url);
+  const [serviceCity, setServiceCity] = useState(SITE.serviceCity);
+
+  useEffect(() => {
+    let active = true;
+    getSiteConfig()
+      .then((response) => {
+        const nextValue = String(response.data?.serviceCity || '').trim();
+        if (active && nextValue) setServiceCity(nextValue);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     // Paste this <footer> as the return value of your Footer component.
@@ -40,12 +56,13 @@ export default function Footer() {
         .ft-soc{transition:transform .2s,background .2s,color .2s,box-shadow .2s;box-shadow:0 5px 0 rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.22)}
         .ft-soc:hover{transform:translateY(-5px) rotate(-6deg);background:#FFC928;color:#16161A;box-shadow:0 9px 0 #B98600,0 16px 22px rgba(255,201,40,.3),inset 0 2px 0 rgba(255,255,255,.55)}
         .ft-soc:active{transform:translateY(2px);box-shadow:0 2px 0 #B98600}
-        .ft-contact{transition:transform .25s}
-        .ft-contact:hover{transform:perspective(600px) rotateY(-8deg) translateX(6px)}
+        .ft-contact{min-width:0;max-width:100%;overflow-wrap:anywhere;transition:transform .25s}
+        .ft-contact a,.ft-contact > :last-child{white-space:normal;overflow-wrap:anywhere;word-break:break-word}
         @keyframes ft-grid{to{background-position:44px 44px}}
         @keyframes ft-orb{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,30px) scale(1.15)}}
         @keyframes ft-slide{to{background-position:200% 0}}
         @keyframes ft-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-5deg)}}
+        @media (min-width:768px){.ft-contact:hover{transform:perspective(600px) rotateY(-8deg) translateX(6px)}}
         @media (prefers-reduced-motion:reduce){.ft *,.ft *::after{animation:none!important;transition:none!important}}
       `}</style>
 
@@ -56,7 +73,7 @@ export default function Footer() {
       <span className="ft-orb pointer-events-none absolute -top-32 right-0 h-80 w-80 rounded-full bg-[#FFC928]/15 blur-3xl" aria-hidden="true" />
       <span className="ft-orb pointer-events-none absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#0F8A2F]/25 blur-3xl" style={{ animationDelay: '-5s' }} aria-hidden="true" />
 
-      <div className="container-x relative grid gap-12 py-16 md:grid-cols-12" style={{ perspective: '1200px' }}>
+      <div className="container-x relative grid grid-cols-12 gap-12 py-16" style={{ perspective: '1200px' }}>
         {/* brand */}
         <motion.div
           initial={{ opacity: 0, y: 50, rotateX: -25 }}
@@ -64,7 +81,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14 }}
           style={{ transformPerspective: 1000 }}
-          className="md:col-span-4"
+          className="col-span-12 min-w-0 md:col-span-4"
         >
           <Link to="/" className="group inline-flex" aria-label="City Delivery Services — home">
             <img src={logo2} alt="City Delivery Services" className="h-28 w-auto max-w-full rounded-2xl object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-32" />
@@ -82,7 +99,7 @@ export default function Footer() {
           <img
             src={playBadge}
             alt="Get it on Google Play"
-            className="mt-6 h-14 w-auto max-w-full object-contain"
+            className="mt-6 h-20 w-auto max-w-full object-contain sm:h-24"
             loading="lazy"
             decoding="async"
           />
@@ -95,7 +112,7 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.12 }}
           style={{ transformPerspective: 1000 }}
-          className="md:col-span-3"
+          className="col-span-12 min-w-0 sm:col-span-6 md:col-span-3"
         >
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">Explore</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
@@ -131,13 +148,13 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.18 }}
           style={{ transformPerspective: 1000 }}
-          className="md:col-span-2"
+          className="col-span-12 min-w-0 sm:col-span-6 md:col-span-2"
         >
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">City where we serve</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
-          <div className="mt-5 flex items-center gap-3 text-white/75">
-            <MapPin size={18} className="shrink-0 text-[#FFC928]" />
-            <span>{SITE.serviceCity}</span>
+          <div className="mt-5 flex min-w-0 items-start gap-3 text-white/75">
+            <MapPin size={18} className="mt-0.5 shrink-0 text-[#FFC928]" />
+            <span className="break-words">{serviceCity}</span>
           </div>
         </motion.div>
 
@@ -148,27 +165,34 @@ export default function Footer() {
           viewport={{ once: true, margin: '-40px' }}
           transition={{ type: 'spring', stiffness: 70, damping: 14, delay: 0.24 }}
           style={{ transformPerspective: 1000 }}
-          className="md:col-span-3"
+          className="col-span-12 min-w-0 max-w-full overflow-hidden md:col-span-3 md:overflow-visible"
         >
           <h3 className="font-display text-sm font-bold uppercase tracking-[0.18em] text-[#FFC928]">Get in touch</h3>
           <span className="mt-2 block h-[3px] w-10 rounded-full bg-[#FFC928]" aria-hidden="true" />
-          <ul className="mt-5 space-y-4 text-white/75">
+          <ul className="mt-5 min-w-0 space-y-4 break-words text-white/75">
             {SITE.email && (
-              <li className="ft-contact flex items-center gap-3">
-                <span className="ft-ico grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#2c2c34] to-[#111115] text-[#FFC928]" style={{ boxShadow: '0 4px 0 #050507,inset 0 1px 0 rgba(255,255,255,.18)' }}><Mail size={18} /></span>
-                <a href={`mailto:${SITE.email}`} className="transition-colors hover:text-[#FFC928]">{SITE.email}</a>
+              <li className="ft-contact grid min-w-0 grid-cols-[40px_minmax(0,1fr)] items-start gap-3">
+                <span className="ft-ico grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#2c2c34] to-[#111115] text-[#FFC928]" style={{ boxShadow: '0 4px 0 #050507,inset 0 1px 0 rgba(255,255,255,.18)' }}><Mail size={18} /></span>
+                <a href={`mailto:${SITE.email}`} className="w-full min-w-0 whitespace-normal break-all pt-2 text-sm leading-relaxed transition-colors hover:text-[#FFC928] sm:text-base">{SITE.email}</a>
               </li>
             )}
             {SITE.phone && (
-              <li className="ft-contact flex items-center gap-3">
-                <span className="ft-ico grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#2c2c34] to-[#111115] text-[#FFC928]" style={{ animationDelay: '-1.2s', boxShadow: '0 4px 0 #050507,inset 0 1px 0 rgba(255,255,255,.18)' }}><Phone size={18} /></span>
-                <a href={`tel:${SITE.phone}`} className="transition-colors hover:text-[#FFC928]">{SITE.phone}</a>
+              <li className="ft-contact grid min-w-0 grid-cols-[40px_minmax(0,1fr)] items-start gap-3">
+                <span className="ft-ico grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#2c2c34] to-[#111115] text-[#FFC928]" style={{ animationDelay: '-1.2s', boxShadow: '0 4px 0 #050507,inset 0 1px 0 rgba(255,255,255,.18)' }}><Phone size={18} /></span>
+                <a href={`tel:${SITE.phone}`} className="w-full min-w-0 whitespace-normal break-all pt-2 text-sm leading-relaxed transition-colors hover:text-[#FFC928] sm:text-base">{SITE.phone}</a>
               </li>
             )}
             {SITE.address && (
-              <li className="ft-contact flex items-start gap-3">
-                <span className="ft-ico grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#2c2c34] to-[#111115] text-[#FFC928]" style={{ animationDelay: '-2.4s', boxShadow: '0 4px 0 #050507,inset 0 1px 0 rgba(255,255,255,.18)' }}><MapPin size={18} /></span>
-                <span className="pt-2">{SITE.address}</span>
+              <li className="ft-contact grid min-w-0 grid-cols-[40px_minmax(0,1fr)] items-start gap-3">
+                <span className="ft-ico grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#2c2c34] to-[#111115] text-[#FFC928]" style={{ animationDelay: '-2.4s', boxShadow: '0 4px 0 #050507,inset 0 1px 0 rgba(255,255,255,.18)' }}><MapPin size={18} /></span>
+                <p
+                  className="w-full min-w-0 whitespace-normal pt-1.5 text-sm leading-relaxed sm:text-base"
+                  style={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}
+                >
+                  {SITE.address.split(/([,—])/).map((part, index) => (
+                    <span key={index}>{part}<wbr /></span>
+                  ))}
+                </p>
               </li>
             )}
             {!SITE.email && !SITE.phone && !SITE.address && (
