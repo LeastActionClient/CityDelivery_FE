@@ -82,10 +82,10 @@ export default function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-6">
       <div
-        className={`relative mx-auto flex max-w-7xl items-center justify-between rounded-full px-3 py-2 backdrop-blur-xl transition-all duration-300 sm:px-5 ${
+        className={`relative mx-auto flex max-w-7xl items-center justify-between rounded-full px-3 py-2 transition-all duration-300 sm:px-5 ${
           scrolled
-            ? 'bg-white/90 shadow-[0_14px_40px_-12px_rgba(20,20,20,0.35),0_4px_0_0_rgba(255,214,10,0.9)] ring-1 ring-brand-dark/10'
-            : 'bg-white/75 shadow-[0_8px_24px_-12px_rgba(20,20,20,0.25),0_3px_0_0_rgba(255,214,10,0.8)] ring-1 ring-brand-dark/5'
+            ? 'bg-white/90 shadow-[0_14px_40px_-12px_rgba(20,20,20,0.35),0_4px_0_0_rgba(255,214,10,0.9)] ring-1 ring-brand-dark/10 backdrop-blur-xl'
+            : 'bg-transparent shadow-none ring-0 backdrop-blur-none'
         }`}
       >
         {/* top highlight for a glossy 3D edge */}
