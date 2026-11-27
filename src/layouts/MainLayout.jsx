@@ -1,10 +1,35 @@
 import { useEffect } from 'react';
-import { useLocation, useOutlet } from 'react-router-dom';
+import { Link, useLocation, useOutlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, ClipboardList } from 'lucide-react';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import WhatsAppFloat from '../components/WhatsAppFloat.jsx';
 import { pageVariants } from '../animations/variants.js';
+
+function MobileRequestFloat() {
+  return (
+    <motion.div
+      className="fixed bottom-5 left-4 z-[60] lg:hidden"
+      animate={{ y: [0, -4, 0] }}
+      transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.96 }}
+    >
+      <Link
+        to="/request"
+        aria-label="Request a Service"
+        className="flex items-center gap-2.5 rounded-full bg-brand-dark py-2 pl-2 pr-4 text-sm font-extrabold text-white shadow-[0_12px_28px_rgba(17,23,19,.35)] ring-1 ring-white/15"
+      >
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-yellow text-brand-dark">
+          <ClipboardList size={18} />
+        </span>
+        <span className="whitespace-nowrap">Request a Service</span>
+        <ArrowUpRight size={16} className="shrink-0 text-brand-yellow" />
+      </Link>
+    </motion.div>
+  );
+}
 
 export default function MainLayout() {
   const { pathname } = useLocation();
@@ -28,6 +53,7 @@ export default function MainLayout() {
         </AnimatePresence>
       </main>
       <Footer />
+      <MobileRequestFloat />
       <WhatsAppFloat />
     </div>
   );

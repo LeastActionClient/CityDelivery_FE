@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { User, Package, Truck, MapPin, Store, ArrowDown, Loader2, Send, CheckCircle2, Copy, Check, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { User, Package, Truck, MapPin, Store, Loader2, Send, CheckCircle2, Copy, Check, AlertTriangle, ShieldCheck, Plus, Trash2 } from 'lucide-react';
 import PageHero from '../components/PageHero.jsx';
 import SEO, { breadcrumbSchema, businessSchema, webPageSchema, websiteSchema } from '../components/SEO.jsx';
 import Field from '../components/form/Field.jsx';
@@ -13,10 +13,16 @@ import { submitProductRequest, ApiError } from '../services/api.js';
 import { CATEGORIES } from '../utils/config.js';
 import { rememberRequest } from '../utils/requestHistory.js';
 
+const MAX_ITEMS = 20;
+
+const newItem = (category = '') => ({
+  productName: '', productCategory: category, storeName: '', storeLocation: '',
+  productDescription: '', quantity: '1', estimatedBudget: '',
+});
+
 const INITIAL = {
   customerName: '', email: '', phone: '',
-  productName: '', productCategory: '', storeName: '', storeLocation: '',
-  productDescription: '', quantity: '1', estimatedBudget: '',
+  items: [newItem()],
   deliveryAddress: '', city: '', postalCode: '', additionalInstructions: '',
   prohibitedItemsAccepted: false,
   website: '', // honeypot — must stay empty
@@ -25,8 +31,6 @@ const INITIAL = {
 const REQUIRED_MSG = {
   customerName: 'Please tell us your name.',
   phone: 'Please enter your mobile number.',
-  productName: 'What product do you need?',
-  productCategory: 'Please choose a category.',
   deliveryAddress: 'Where should we deliver it?',
   city: 'Please enter the city.',
   postalCode: 'Please enter the postal code.',
@@ -42,15 +46,23 @@ function validate(v) {
     const digits = t('phone').replace(/\D/g, '');
     if (!/^\+?[\d\s()-]{7,18}$/.test(t('phone')) || digits.length < 7 || digits.length > 15) e.phone = 'Please enter a valid mobile number.';
   }
-  if (!e.productName && t('productName').length < 2) e.productName = 'Product name is too short.';
-  if (t('storeName') && t('storeName').length < 2) e.storeName = 'Store name is too short.';
-  if (t('storeLocation') && t('storeLocation').length < 2) e.storeLocation = 'Store location is too short.';
-  if (t('productDescription') && t('productDescription').length < 10) e.productDescription = 'Please add a little more detail (at least 10 characters).';
+  v.items.forEach((item, index) => {
+    const key = (field) => `items.${index}.${field}`;
+    const it = (field) => item[field].trim();
+    if (!it('productName')) e[key('productName')] = 'What product do you need?';
+    else if (it('productName').length < 2) e[key('productName')] = 'Product name is too short.';
+    if (!it('productCategory')) e[key('productCategory')] = 'Please choose a category.';
+    if (it('storeName') && it('storeName').length < 2) e[key('storeName')] = 'Store name is too short.';
+    if (it('storeLocation') && it('storeLocation').length < 2) e[key('storeLocation')] = 'Store location is too short.';
+    if (it('productDescription') && it('productDescription').length < 10) e[key('productDescription')] = 'Please add a little more detail.';
+    const q = Number(item.quantity);
+    if (!Number.isInteger(q) || q < 1 || q > 100) e[key('quantity')] = 'Quantity must be between 1 and 100.';
+    if (item.estimatedBudget !== '' && (Number.isNaN(Number(item.estimatedBudget)) || Number(item.estimatedBudget) < 0)) {
+      e[key('estimatedBudget')] = 'Budget must be a positive number.';
+    }
+  });
   if (!e.deliveryAddress && t('deliveryAddress').length < 5) e.deliveryAddress = 'Please enter the full delivery address.';
   if (!e.postalCode && !/^[A-Za-z0-9][A-Za-z0-9\s-]{2,10}$/.test(t('postalCode'))) e.postalCode = 'Please enter a valid postal code.';
-  const q = Number(v.quantity);
-  if (!Number.isInteger(q) || q < 1 || q > 100) e.quantity = 'Quantity must be between 1 and 100.';
-  if (v.estimatedBudget !== '' && (Number.isNaN(Number(v.estimatedBudget)) || Number(v.estimatedBudget) < 0)) e.estimatedBudget = 'Budget must be a positive number.';
   if (!v.prohibitedItemsAccepted) e.prohibitedItemsAccepted = 'Please confirm that your parcel contains only permitted items.';
   return e;
 }
@@ -131,7 +143,7 @@ function Success({ result, onReset }) {
 export default function RequestProduct() {
   const [searchParams] = useSearchParams();
   const requestedCategory = CATEGORIES.includes(searchParams.get('category')) ? searchParams.get('category') : '';
-  const [values, setValues] = useState(() => ({ ...INITIAL, productCategory: requestedCategory }));
+  const [values, setValues] = useState(() => ({ ...INITIAL, items: [newItem(requestedCategory)] }));
   const [errors, setErrors] = useState({});
   const [image, setImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -142,13 +154,37 @@ export default function RequestProduct() {
   const formRef = useRef(null);
 
   useEffect(() => {
-    setValues((v) => ({ ...v, productCategory: requestedCategory }));
+    setValues((v) => ({
+      ...v,
+      items: v.items.map((item, index) => index === 0 ? { ...item, productCategory: requestedCategory } : item),
+    }));
   }, [requestedCategory]);
 
   const set = (k) => (e) => {
     const val = e?.target ? e.target.value : e;
     setValues((v) => ({ ...v, [k]: val }));
     if (errors[k]) setErrors((er) => ({ ...er, [k]: undefined }));
+  };
+
+  const setItem = (index, k) => (e) => {
+    const val = e?.target ? e.target.value : e;
+    const errorKey = `items.${index}.${k}`;
+    setValues((v) => ({
+      ...v,
+      items: v.items.map((item, i) => i === index ? { ...item, [k]: val } : item),
+    }));
+    if (errors[errorKey]) setErrors((er) => ({ ...er, [errorKey]: undefined }));
+  };
+
+  const addItem = () => {
+    if (values.items.length >= MAX_ITEMS) return;
+    setValues((v) => ({ ...v, items: [...v.items, newItem(requestedCategory)] }));
+  };
+
+  const removeItem = (index) => {
+    if (values.items.length === 1) return;
+    setValues((v) => ({ ...v, items: v.items.filter((_, i) => i !== index) }));
+    setErrors({});
   };
 
   const common = (k) => ({
@@ -159,6 +195,18 @@ export default function RequestProduct() {
     'aria-invalid': errors[k] ? true : undefined,
     'aria-describedby': errors[k] ? `${k}-error` : undefined,
   });
+
+  const itemCommon = (index, k) => {
+    const key = `items.${index}.${k}`;
+    return {
+      id: key,
+      value: values.items[index][k],
+      onChange: setItem(index, k),
+      className: `field ${errors[key] ? 'field-error' : ''}`,
+      'aria-invalid': errors[key] ? true : undefined,
+      'aria-describedby': errors[key] ? `${key}-error` : undefined,
+    };
+  };
 
   const focusFirstError = (errs) => {
     const first = Object.keys(errs).find((k) => errs[k]);
@@ -184,6 +232,18 @@ export default function RequestProduct() {
     Object.entries(values).forEach(([k, v]) => {
       if (typeof v === 'string') fd.append(k, v.trim());
     });
+    const cleanItems = values.items.map((item) => Object.fromEntries(
+      Object.entries(item).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])
+    ));
+    const primary = cleanItems[0];
+    fd.append('items', JSON.stringify(cleanItems));
+    fd.append('productName', primary.productName);
+    fd.append('productCategory', primary.productCategory);
+    fd.append('storeName', primary.storeName);
+    fd.append('storeLocation', primary.storeLocation);
+    fd.append('productDescription', primary.productDescription);
+    fd.append('quantity', primary.quantity);
+    fd.append('estimatedBudget', primary.estimatedBudget);
     fd.append('submissionKey', submissionKey.current);
     fd.append('prohibitedItemsAccepted', values.prohibitedItemsAccepted ? 'true' : 'false');
     if (image) fd.append('productImage', image);
@@ -206,7 +266,7 @@ export default function RequestProduct() {
   };
 
   const reset = () => {
-    setValues({ ...INITIAL, productCategory: requestedCategory });
+    setValues({ ...INITIAL, items: [newItem(requestedCategory)] });
     setImage(null);
     setErrors({});
     setFormError('');
@@ -265,69 +325,84 @@ export default function RequestProduct() {
                   </Field>
                 </SectionCard>
 
-                <SectionCard icon={Package} step={2} title="The product" subtitle="What you want and any helpful details." delay={0.05}>
-                  <Field id="productName" label="Product name" required error={errors.productName}>
-                    <input {...common('productName')} type="text" placeholder="e.g. Cold-pressed olive oil 1L" maxLength={120} />
-                  </Field>
-                  <Field id="productCategory" label="Product category" required error={errors.productCategory}>
-                    <CustomSelect id="productCategory" value={values.productCategory} onChange={set('productCategory')} options={CATEGORIES} placeholder="Choose a category" invalid={!!errors.productCategory} />
-                  </Field>
-                  <div className="sm:col-span-2">
-                    <Field id="productDescription" label="Product description" optional error={errors.productDescription} hint="Brand, size, colour, flavour — anything that helps us find the right one.">
-                      <textarea {...common('productDescription')} rows={4} maxLength={1500} placeholder="Describe the product in as much detail as you can…" />
-                    </Field>
+                <SectionCard icon={Package} step={2} title="Products & stores" subtitle="Add as many products or stores as you need — one Request ID covers them all." delay={0.05}>
+                  <div className="sm:col-span-2 space-y-5">
+                    {values.items.map((item, index) => {
+                      const key = (field) => `items.${index}.${field}`;
+                      return (
+                        <div key={index} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-yellow/10 via-white to-white p-5 shadow-soft ring-1 ring-brand-yellow/30 sm:p-6">
+                          <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand-yellow/20 blur-2xl" />
+                          <div className="relative mb-6 flex flex-wrap items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-yellow text-brand-dark shadow-soft"><Store size={18} /></span>
+                              <div>
+                                <p className="text-sm font-extrabold text-brand-dark">Item {index + 1}</p>
+                                <p className="text-xs text-brand-muted">Product and pickup store</p>
+                              </div>
+                            </div>
+                            {values.items.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeItem(index)}
+                                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2 text-xs font-bold text-red-600 ring-1 ring-red-200 transition hover:bg-red-50"
+                              >
+                                <Trash2 size={14} /> Remove
+                              </button>
+                            )}
+                          </div>
+                          <div className="relative grid gap-5 sm:grid-cols-2">
+                            <Field id={key('productName')} label="Product name" required error={errors[key('productName')]}>
+                              <input {...itemCommon(index, 'productName')} type="text" placeholder="e.g. Cold-pressed olive oil 1L" maxLength={120} />
+                            </Field>
+                            <Field id={key('productCategory')} label="Product category" required error={errors[key('productCategory')]}>
+                              <CustomSelect
+                                id={key('productCategory')}
+                                value={item.productCategory}
+                                onChange={setItem(index, 'productCategory')}
+                                options={CATEGORIES}
+                                placeholder="Choose a category"
+                                invalid={!!errors[key('productCategory')]}
+                              />
+                            </Field>
+                            <div className="sm:col-span-2">
+                              <Field id={key('productDescription')} label="Product description" optional error={errors[key('productDescription')]} hint="Brand, size, colour, flavour — anything that helps us find the right one.">
+                                <textarea {...itemCommon(index, 'productDescription')} rows={4} maxLength={1500} placeholder="Describe the product in as much detail as you can…" />
+                              </Field>
+                            </div>
+                            <Field id={key('quantity')} label="Quantity" required error={errors[key('quantity')]}>
+                              <input {...itemCommon(index, 'quantity')} type="number" inputMode="numeric" min={1} max={100} />
+                            </Field>
+                            <Field id={key('estimatedBudget')} label="Estimated budget" optional error={errors[key('estimatedBudget')]} hint="In ₹ — a rough number is fine.">
+                              <input {...itemCommon(index, 'estimatedBudget')} type="number" inputMode="decimal" min={0} placeholder="e.g. 850" />
+                            </Field>
+                            <Field id={key('storeName')} label="Store name" optional error={errors[key('storeName')]}>
+                              <input {...itemCommon(index, 'storeName')} type="text" placeholder="e.g. Fresh Mart" maxLength={120} />
+                            </Field>
+                            <Field id={key('storeLocation')} label="Store location" optional error={errors[key('storeLocation')]} hint="Area, street or landmark.">
+                              <input {...itemCommon(index, 'storeLocation')} type="text" placeholder="e.g. Anna Nagar, near the main roundabout" maxLength={200} />
+                            </Field>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      onClick={addItem}
+                      disabled={values.items.length >= MAX_ITEMS}
+                      className="inline-flex items-center gap-2 rounded-full bg-brand-dark px-5 py-3 text-sm font-extrabold text-white shadow-soft transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <Plus size={17} /> Add another product / store
+                    </button>
+                    <p className="text-xs font-semibold text-brand-muted">Up to {MAX_ITEMS} items in one request. All items share the same delivery address.</p>
                   </div>
-                  <Field id="quantity" label="Quantity" required error={errors.quantity}>
-                    <input {...common('quantity')} type="number" inputMode="numeric" min={1} max={100} />
-                  </Field>
-                  <Field id="estimatedBudget" label="Estimated budget" optional error={errors.estimatedBudget} hint="In ₹ — a rough number is fine.">
-                    <input {...common('estimatedBudget')} type="number" inputMode="decimal" min={0} placeholder="e.g. 850" />
-                  </Field>
                   <div className="sm:col-span-2">
-                    <Field id="productImage" label="Product image" optional hint="A photo helps us identify the exact item." error={errors.productImage}>
+                    <Field id="productImage" label="Reference image" optional hint="One photo for the whole request — a product, bill or storefront." error={errors.productImage}>
                       <ImageUpload id="productImage" file={image} onChange={setImage} error={errors.productImage} />
                     </Field>
                   </div>
                 </SectionCard>
 
-                <SectionCard icon={Truck} step={3} title="Pickup & Delivery" subtitle="Pickup point and delivery destination in one place." delay={0.05}>
-                  <div className="flex items-center gap-3 rounded-2xl bg-brand-dark px-4 py-3 text-white shadow-soft sm:col-span-2 sm:px-5">
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-yellow text-brand-dark"><Store size={16} /></span>
-                    <span className="text-sm font-extrabold">From</span>
-                    <span className="mx-1 flex-1 border-t-2 border-dashed border-white/25" />
-                    <Truck size={18} className="shrink-0 text-brand-yellow" />
-                    <span className="mx-1 flex-1 border-t-2 border-dashed border-white/25" />
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-green text-white"><MapPin size={16} /></span>
-                    <span className="text-sm font-extrabold">To</span>
-                  </div>
-
-                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-yellow/20 via-white to-white p-5 shadow-soft ring-1 ring-brand-yellow/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:col-span-2 sm:p-6">
-                    <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand-yellow/20 blur-2xl" />
-                    <div className="relative flex flex-wrap items-center gap-3">
-                      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-yellow text-brand-dark shadow-soft"><Store size={22} /></span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand-dark">From</p>
-                          <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-brand-muted ring-1 ring-black/5">Pickup</span>
-                        </div>
-                        <p className="mt-1 text-sm text-brand-muted">Where should we collect it? Optional if you are still deciding.</p>
-                      </div>
-                      <span className="hidden rounded-full bg-white/80 px-3 py-1 text-xs font-bold text-brand-muted ring-1 ring-black/5 sm:block">Optional</span>
-                    </div>
-                    <div className="relative mt-6 grid gap-5 sm:grid-cols-2">
-                      <Field id="storeName" label="Store name" optional error={errors.storeName}>
-                        <input {...common('storeName')} type="text" placeholder="e.g. Fresh Mart" maxLength={120} />
-                      </Field>
-                      <Field id="storeLocation" label="Store location" optional error={errors.storeLocation} hint="Area, street or landmark.">
-                        <input {...common('storeLocation')} type="text" placeholder="e.g. Anna Nagar, near the main roundabout" maxLength={200} />
-                      </Field>
-                    </div>
-                  </div>
-
-                  <div aria-hidden="true" className="relative z-10 -my-1 flex justify-center sm:col-span-2">
-                    <span className="grid h-9 w-9 place-items-center rounded-full bg-white text-brand-green shadow-soft ring-1 ring-brand-yellow/40"><ArrowDown size={18} /></span>
-                  </div>
-
+                <SectionCard icon={Truck} step={3} title="Delivery" subtitle="One delivery address for every item in this request." delay={0.05}>
                   <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-green/10 via-white to-white p-5 shadow-soft ring-1 ring-brand-green/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-lift sm:col-span-2 sm:p-6">
                     <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-brand-green/10 blur-2xl" />
                     <div className="relative flex flex-wrap items-center gap-3">

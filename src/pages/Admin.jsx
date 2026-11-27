@@ -49,6 +49,25 @@ function valueOrDash(value) {
   return value || 'Not provided';
 }
 
+function requestItems(item) {
+  if (Array.isArray(item.items) && item.items.length) return item.items;
+  return [{
+    productName: item.productName,
+    productCategory: item.productCategory,
+    storeName: item.storeName,
+    storeLocation: item.storeLocation,
+    productDescription: item.productDescription,
+    quantity: item.quantity,
+    estimatedBudget: item.estimatedBudget,
+  }];
+}
+
+function requestSummary(item) {
+  const items = requestItems(item);
+  if (items.length === 1) return `${valueOrDash(items[0].productName)} · ${formatDate(item.createdAt)}`;
+  return `${items.length} items · ${items.map((entry) => entry.productName).filter(Boolean).join(', ')} · ${formatDate(item.createdAt)}`;
+}
+
 function statusClass(status) {
   return {
     Pending: 'bg-amber-100 text-amber-900',
@@ -154,7 +173,7 @@ function RequestCard({ item, apiKey, onStatusChange }) {
             <span className={`rounded-full px-3 py-1 text-xs font-bold ${statusClass(item.status)}`}>{item.status}</span>
           </div>
           <h2 className="mt-3 truncate text-xl font-extrabold text-brand-dark">{valueOrDash(item.customerName)}</h2>
-          <p className="mt-1 truncate text-sm text-brand-muted">{valueOrDash(item.productName)} · {formatDate(item.createdAt)}</p>
+          <p className="mt-1 truncate text-sm text-brand-muted">{requestSummary(item)}</p>
         </div>
         <div className="flex shrink-0 items-center gap-3">
           <select
@@ -175,15 +194,25 @@ function RequestCard({ item, apiKey, onStatusChange }) {
         <div className="grid gap-4 md:grid-cols-2">
           <Detail icon={Mail} label="Email">{valueOrDash(item.email)}</Detail>
           <Detail icon={Phone} label="Mobile number">{valueOrDash(item.phone)}</Detail>
-          <Detail icon={Package} label="Product">{valueOrDash(item.productName)}</Detail>
-          <Detail icon={ClipboardList} label="Category">{valueOrDash(item.productCategory)}</Detail>
-          <Detail icon={Store} label="Store name">{valueOrDash(item.storeName)}</Detail>
-          <Detail icon={MapPin} label="Store location">{valueOrDash(item.storeLocation)}</Detail>
-          <Detail icon={ClipboardList} label="Description">{valueOrDash(item.productDescription)}</Detail>
-          <Detail icon={ClipboardList} label="Quantity">{valueOrDash(item.quantity)}</Detail>
+          {requestItems(item).map((entry, index) => (
+            <div key={index} className="rounded-2xl bg-brand-light/60 p-4 md:col-span-2">
+              <div className="mb-3 flex items-center gap-2 text-sm font-extrabold text-brand-dark">
+                <Package size={17} className="text-brand-green" />
+                {requestItems(item).length > 1 ? `Item ${index + 1}: ${valueOrDash(entry.productName)}` : 'Product'}
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Detail icon={Package} label="Product">{valueOrDash(entry.productName)}</Detail>
+                <Detail icon={ClipboardList} label="Category">{valueOrDash(entry.productCategory)}</Detail>
+                <Detail icon={Store} label="Store name">{valueOrDash(entry.storeName)}</Detail>
+                <Detail icon={MapPin} label="Store location">{valueOrDash(entry.storeLocation)}</Detail>
+                <Detail icon={ClipboardList} label="Description">{valueOrDash(entry.productDescription)}</Detail>
+                <Detail icon={ClipboardList} label="Quantity">{valueOrDash(entry.quantity)}</Detail>
+                <Detail icon={ClipboardList} label="Estimated budget">{entry.estimatedBudget != null ? `₹${Number(entry.estimatedBudget).toLocaleString('en-IN')}` : 'Not provided'}</Detail>
+              </div>
+            </div>
+          ))}
           <Detail icon={MapPin} label="Delivery address">{valueOrDash(item.deliveryAddress)}</Detail>
           <Detail icon={MapPin} label="City / postal code">{valueOrDash(item.city)}{item.postalCode ? ` · ${item.postalCode}` : ''}</Detail>
-          <Detail icon={ClipboardList} label="Estimated budget">{item.estimatedBudget != null ? `₹${Number(item.estimatedBudget).toLocaleString('en-IN')}` : 'Not provided'}</Detail>
           <Detail icon={ShieldCheck} label="Permitted items declaration">
             {item.prohibitedItemsDeclaration?.accepted
               ? `Accepted · ${item.prohibitedItemsDeclaration.policyVersion || 'Version not recorded'} · ${formatDate(item.prohibitedItemsDeclaration.acceptedAt)}`

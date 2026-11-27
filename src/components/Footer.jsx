@@ -92,7 +92,7 @@ export default function Footer() {
       <span className="ft-orb pointer-events-none absolute -top-32 right-0 h-80 w-80 rounded-full bg-[#FFC928]/15 blur-3xl" aria-hidden="true" />
       <span className="ft-orb pointer-events-none absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#0F8A2F]/25 blur-3xl" style={{ animationDelay: '-5s' }} aria-hidden="true" />
 
-      <div className="container-x relative grid grid-cols-1 gap-10 py-16 sm:grid-cols-12 sm:gap-12" style={{ perspective: '1200px' }}>
+      <div className="container-x relative grid grid-cols-1 gap-10 pb-28 pt-16 sm:grid-cols-12 sm:gap-12 lg:pb-16" style={{ perspective: '1200px' }}>
         {/* brand */}
         <motion.div
           initial={{ opacity: 0, y: 50, rotateX: -25 }}
