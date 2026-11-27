@@ -194,11 +194,11 @@ export default function RequestHistory() {
       <main className="relative z-10 -mt-12 bg-brand-light px-4 pb-24 sm:px-8">
         <div className="mx-auto max-w-5xl">
           <div className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-white p-4 shadow-lift ring-1 ring-black/5">
-            <div className="flex items-center gap-3 mt-10">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-yellow text-brand-dark">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-yellow text-brand-dark">
                 <Clock3 size={22} />
               </span>
-              <div>
+              <div className="min-w-0">
                 <p className="font-extrabold text-brand-dark">Live tracking dashboard</p>
                 <p className="text-sm text-brand-muted">Statuses refresh automatically from your saved Request IDs.</p>
               </div>
